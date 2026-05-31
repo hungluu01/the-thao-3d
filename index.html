@@ -563,3 +563,47 @@
     socialBenefits();
 </script>
 <!-- PART 2 END -->
+<!-- PART 2 START -->
+<div id="part2">
+    <h2>Part 2 - Giới thiệu & Kiến thức chạy bộ</h2>
+    <div id="miniPart2_1">Mini Part 1: Giới thiệu tổng quan</div>
+    <div id="miniPart2_2">Mini Part 2: Lợi ích sức khỏe</div>
+    <div id="miniPart2_3">Mini Part 3: Lợi ích tinh thần</div>
+    <div id="miniPart2_4">Mini Part 4: Lợi ích xã hội & cộng đồng</div>
+</div>
+
+<script>
+    console.log(">>> Part 2 đã append thành công <<<");
+
+    // Mini Part 2.1 logic
+    function introRunning() {
+        document.getElementById("miniPart2_1").innerHTML += "<p>Chạy bộ là môn thể thao đơn giản, dễ tiếp cận, phù hợp mọi lứa tuổi.</p>";
+        console.log("Mini Part 2.1: Giới thiệu tổng quan");
+    }
+
+    // Mini Part 2.2 logic
+    function healthBenefits() {
+        let benefits = ["Cải thiện tim mạch", "Giảm cân", "Tăng sức bền"];
+        document.getElementById("miniPart2_2").innerHTML += "<ul>" + benefits.map(b => "<li>"+b+"</li>").join("") + "</ul>";
+        console.log("Mini Part 2.2: Lợi ích sức khỏe");
+    }
+
+    // Mini Part 2.3 logic
+    function mentalBenefits() {
+        document.getElementById("miniPart2_3").innerHTML += "<p>Chạy bộ giúp giảm stress, cải thiện giấc ngủ, tăng sự tự tin.</p>";
+        console.log("Mini Part 2.3: Lợi ích tinh thần");
+    }
+
+    // Mini Part 2.4 logic
+    function socialBenefits() {
+        document.getElementById("miniPart2_4").innerHTML += "<p>Chạy bộ tạo kết nối cộng đồng, tham gia các giải chạy, gắn kết bạn bè.</p>";
+        console.log("Mini Part 2.4: Lợi ích xã hội & cộng đồng");
+    }
+
+    // Khởi chạy tất cả mini part
+    introRunning();
+    healthBenefits();
+    mentalBenefits();
+    socialBenefits();
+</script>
+<!-- PART 2 END -->
