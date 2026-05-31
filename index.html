@@ -726,3 +726,55 @@
     });
 </script>
 <!-- PART 2.2 END -->
+<!-- PART 2.3 START -->
+<div id="miniPart2_3" style="text-align:center; margin-top:50px; position:relative; overflow:hidden;">
+    <h2 style="color:#ff00ff; font-weight:900;">Lợi ích tinh thần</h2>
+    <p style="color:#fff; font-size:20px;">Chạy bộ giúp giảm stress, cải thiện giấc ngủ, tăng sự tự tin.</p>
+    <div id="quoteLED" style="position:absolute; top:60px; left:100%; white-space:nowrap; font-size:32px; font-weight:bold; color:#00ffcc; text-shadow:0 0 10px #00ffcc;">
+        KEEP RUNNING – STAY STRONG – BE FUTURE
+    </div>
+</div>
+
+<style>
+  body.gradientFlow {
+    background: linear-gradient(90deg, #0011ff, #6600ff, #ffcc00);
+    background-size: 600% 600%;
+    animation: gradientMove 15s ease infinite;
+  }
+  @keyframes gradientMove {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+  }
+</style>
+
+<script>
+    console.log(">>> Part 2.3 Lợi ích tinh thần đã append thành công <<<");
+
+    // Gradient Flow
+    document.body.classList.add("gradientFlow");
+    window.addEventListener("scroll",()=>{
+        document.body.style.animationDuration = "8s"; // cuộn nhanh → gradient đổi màu nhanh hơn
+    });
+
+    // LED Quote Animation
+    const quote = document.getElementById("quoteLED");
+    function animateQuote(){
+        let pos = parseInt(quote.style.left);
+        if(isNaN(pos)) pos = window.innerWidth;
+        pos -= 4;
+        if(pos < -quote.offsetWidth) pos = window.innerWidth;
+        quote.style.left = pos + "px";
+        requestAnimationFrame(animateQuote);
+    }
+    animateQuote();
+
+    // Hover effect: quote sáng mạnh hơn
+    quote.addEventListener("mouseover",()=>{
+        quote.style.textShadow="0 0 20px #00ffcc, 0 0 40px #00ffcc";
+    });
+    quote.addEventListener("mouseout",()=>{
+        quote.style.textShadow="0 0 10px #00ffcc";
+    });
+</script>
+<!-- PART 2.3 END -->
