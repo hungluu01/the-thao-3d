@@ -833,3 +833,64 @@
     });
 </script>
 <!-- PART 2.4 END -->
+<!-- FIX NIKE 3D + FUTURISTIC FONT -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+
+<style>
+  body, h1, h2, h3, p, button {
+    font-family: 'Orbitron', sans-serif;
+    letter-spacing: 1px;
+  }
+  h2 {
+    text-transform: uppercase;
+    color: #00ffcc;
+    text-shadow: 0 0 15px #00ffcc;
+  }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script>
+  // Load Nike Shoe model từ repo public/models
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+  renderer.setSize(window.innerWidth, 600);
+  document.getElementById("nikeCanvasContainer").appendChild(renderer.domElement);
+
+  const light = new THREE.PointLight(0xffffff, 1);
+  light.position.set(10,10,10);
+  scene.add(light);
+  scene.add(new THREE.AmbientLight(0x404040));
+
+  const loader = new THREE.GLTFLoader();
+  loader.load("/models/NikeShoe.glb", function(gltf){
+      const shoe = gltf.scene;
+      shoe.scale.set(2,2,2);
+      shoe.position.y = -1;
+      scene.add(shoe);
+
+      // Drag rotate
+      let isDragging=false, prevX=0, prevY=0;
+      renderer.domElement.addEventListener("mousedown", e=>{isDragging=true; prevX=e.clientX; prevY=e.clientY;});
+      renderer.domElement.addEventListener("mouseup", ()=>{isDragging=false;});
+      renderer.domElement.addEventListener("mousemove", e=>{
+          if(isDragging){
+              let dx=e.clientX-prevX, dy=e.clientY-prevY;
+              shoe.rotation.y += dx*0.01;
+              shoe.rotation.x += dy*0.01;
+              prevX=e.clientX; prevY=e.clientY;
+          }
+      });
+
+      function animate(){
+          requestAnimationFrame(animate);
+          shoe.rotation.y += 0.002;
+          renderer.render(scene,camera);
+      }
+      animate();
+  });
+
+  camera.position.z = 5;
+</script>
+<!-- END FIX -->
