@@ -1,0 +1,220 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yêu Chạy Bộ — Siêu Nền Tảng Kỹ Thuật Số Dành Cho Runner</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        heading: ['"Instrument Serif"', 'serif'],
+                        body: ['"Barlow"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background-color: #030303;
+            color: #ffffff;
+            font-family: 'Barlow', sans-serif;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Hệ thống kính mờ Liquid Glassmorphism cường độ cao */
+        .liquid-glass-panel {
+            background: rgba(255, 255, 255, 0.01);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.03);
+        }
+
+        /* Kỹ thuật kích hoạt tăng tốc phần cứng (GPU Acceleration) chống giật lag */
+        .accelerate-gpu {
+            will-change: transform, opacity;
+            transform-style: preserve-3d;
+            backface-visibility: hidden;
+        }
+
+        /* Thanh cuộn mỹ thuật được tùy biến riêng cho trang web */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #030303;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(234, 179, 8, 0.2);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #eab308;
+        }
+    </style>
+
+    <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+    
+    <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
+    
+    <script src="https://unpkg.com/framer-motion@11.11.17/dist/framer-motion.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <div id="particles-layer"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+        const { motion, AnimatePresence } = window.FramerMotion;
+
+        /* ========================================================================= */
+        /* [VÙNG CHÈN HOẶC BỔ SUNG CÁC MÔ-ĐUN/HÀM TRONG TƯƠNG LAI - KHÔNG ĐƯỢC XÓA] */
+                /* ========================================================================= */
+        /* [VÙNG CHÈN HOẶC BỔ SUNG CÁC MÔ-ĐUN/HÀM TRONG TƯƠNG LAI - KHÔNG ĐƯỢC XÓA] */
+        
+        // Khởi tạo kho dữ liệu Kiến thức chuyên sâu Extra cho Runner
+        const kienThucChayBoData = [
+            {
+                id: 1,
+                danhMuc: "Giáo án & Kỹ thuật",
+                tieuDe: "Phương pháp chạy MAF (Maximum Aerobic Function) giúp tăng sức bền tim mạch tối đa",
+                tomTat: "Cách thức giữ nhịp tim ở vùng hiếu khí giúp cơ thể đốt mỡ hiệu quả, giảm thiểu áp lực lên cơ xương khớp và triệt tiêu hoàn toàn nguy cơ chấn thương cho người mới bắt đầu.",
+                chiTiet: "Công thức cốt lõi là lấy 180 trừ đi số tuổi của bạn để ra nhịp tim mục tiêu tối đa khi tập luyện bền bỉ."
+            },
+            {
+                id: 2,
+                danhMuc: "Dinh dưỡng thể thao",
+                tieuDe: "Chiến lược nạp Carbs (Carbo-loading) tối ưu trước ngày chạy giải Marathon (42.195km)",
+                tomTat: "Hướng dẫn tích trữ Glycogen đầy đủ trong các bó cơ trước cuộc đua 3 ngày để ngăn ngừa tình trạng đụng tường (hit the wall) ở km thứ 30.",
+                chiTiet: "Tăng tỷ lệ carbohydrate phức hợp lên 70-80% tổng lượng calo nạp vào hàng ngày, kết hợp giảm dần khối lượng bài tập."
+            },
+            {
+                id: 3,
+                danhMuc: "Y học & Chấn thương",
+                tieuDe: "Phòng ngừa và xử lý hội chứng đau bánh chè (Runner's Knee) hiệu quả tại nhà",
+                tomTat: "Phân tích nguyên nhân gốc rễ do mất cân bằng cơ tứ đầu đùi và các bài tập bổ trợ cốt lõi để gia cố vùng khớp gối luôn khỏe mạnh.",
+                chiTiet: "Áp dụng ngay phác đồ R.I.C.E kết hợp các bài tập squat một chân, giãn cơ mông nhỡ định kỳ sau mỗi buổi chạy dài."
+            }
+        ];
+        /* PLACEHOLDER_FOR_FUTURE_FUNCTIONS */
+        /* ========================================================================= */
+
+        // Thành phần Ứng dụng chính điều phối cấu trúc trang web
+        const MainApplication = () => {
+            return (
+                <div className="relative min-h-screen w-full">
+                    
+                    {/* Thanh Điều hướng Đầu trang mặc định */}
+                    <nav className="fixed top-4 left-0 right-0 max-w-6xl mx-auto px-6 h-16 rounded-full liquid-glass-panel z-50 flex items-center justify-between mx-4 md:mx-auto">
+                        <div className="text-xl font-black tracking-tighter text-white">
+                            YÊU CHẠY BỘ<span className="text-yellow-400">.</span>
+                        </div>
+                    </nav>
+
+                    {/* Khung chứa các phần Nội dung chính của trang web */}
+                    <div className="max-w-5xl mx-auto px-4 pt-32 space-y-24 relative z-10">
+                        
+                        {/* Tiêu đề Chào mừng lớn ở Trang chủ */}
+                        <header className="text-center py-12 accelerate-gpu">
+                            <span className="text-xs font-bold tracking-widest text-yellow-400 bg-yellow-400/10 px-3 py-1 rounded-full uppercase">
+                                // HỆ THỐNG KIẾN TRÚC MỚI 2026
+                            </span>
+                            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mt-6 uppercase leading-none text-white">
+                                NÂNG TẦM SỨC BỀN <br/>
+                                <span className="font-heading italic font-light text-yellow-400 lowercase text-6xl md:text-8xl">VIỆT NAM</span>
+                            </h1>
+                        </header>
+
+                        /* ========================================================== */
+                        /* [VÙNG CHÈN CÁC KHỐI NỘI DUNG DANH MỤC TRÊN TRANG CHỦ]      */
+                                                /* ========================================================== */
+                        /* [VÙNG CHÈN CÁC KHỐI NỘI DUNG DANH MỤC TRÊN TRANG CHỦ]      */
+                        
+                        {/* DANH MỤC: GIỚI THIỆU TỔNG QUAN & 1001 LỢI ÍCH */}
+                        <section id="gioi-thieu" className="accelerate-gpu">
+                            <div className="liquid-glass-panel p-8 md:p-12 rounded-[2.5rem] bg-gradient-to-br from-white/[0.02] to-transparent border border-white/10">
+                                <span className="text-xs font-bold tracking-widest text-yellow-400 uppercase block mb-4">// 01 / KHÔNG GIAN BỀN BỈ</span>
+                                <h2 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight leading-tight uppercase mb-6">
+                                    Chào mừng tới cộng đồng <br/> Thúc đẩy 1 triệu bàn chân Runner Việt Nam
+                                </h2>
+                                <p className="text-white/70 font-light text-base leading-relaxed mb-8">
+                                    "Yêu Chạy Bộ" không đơn thuần là một website kiến thức, đây là bệ phóng tinh thần giúp bạn khai phá phiên bản mạnh mẽ nhất của chính mình. Chạy bộ là bộ môn kỳ diệu nơi mỗi bước chân đều mang lại sự chuyển hóa sâu sắc từ thể chất đến tâm trí.
+                                </p>
+                                
+                                {/* Khối hiển thị 1001 Lợi ích cấu trúc Grid nhỏ */}
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-white/5">
+                                    <div className="p-4 rounded-2xl bg-white/[0.01]">
+                                        <div className="text-xl font-bold text-yellow-400 mb-1">Tâm Trí Sạch Sẽ</div>
+                                        <p className="text-xs text-white/50 font-light">Kích hoạt Endorphin giải tỏa áp lực, tăng cường sự tập trung và triệt tiêu stress tức thì.</p>
+                                    </div>
+                                    <div className="p-4 rounded-2xl bg-white/[0.01]">
+                                        <div className="text-xl font-bold text-yellow-400 mb-1">Trái Tim Thép</div>
+                                        <p className="text-xs text-white/50 font-light">Tối ưu hóa dung tích phổi, giảm nhịp tim nghỉ ngơi và tăng cường hệ tuần hoàn bền bỉ.</p>
+                                    </div>
+                                    <div className="p-4 rounded-2xl bg-white/[0.01]">
+                                        <div className="text-xl font-bold text-yellow-400 mb-1">Cơ Xương Khớp Dẻo Dai</div>
+                                        <p className="text-xs text-white/50 font-light">Tăng mật độ xương, bôi trơn các mô sụn khớp và tạo form người săn chắc tự nhiên.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* DANH MỤC: KIẾN THỨC CỐT LÕI (MỞ RỘNG) */}
+                        <section id="kien-thuc" className="accelerate-gpu">
+                            <div className="mb-8">
+                                <span className="text-xs font-bold tracking-widest text-yellow-400 uppercase block mb-2">// 02 / CẨM NANG KHOA HỌC</span>
+                                <h2 className="text-3xl font-extrabold text-white uppercase tracking-tight">Kiến thức nền tảng từ chuyên gia</h2>
+                            </div>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                {kienThucChayBoData.map((item) => (
+                                    <div key={item.id} className="liquid-glass-panel p-6 rounded-[2rem] flex flex-col justify-between hover:border-yellow-400/30 transition-all duration-300 group">
+                                        <div>
+                                            <span className="text-[10px] font-bold tracking-wider text-yellow-400/80 uppercase px-2 py-0.5 rounded bg-white/5 inline-block mb-3">
+                                                {item.danhMuc}
+                                            </span>
+                                            <h3 className="text-xl font-bold text-white group-hover:text-yellow-400 transition-colors duration-200 line-clamp-2">
+                                                {item.tieuDe}
+                                            </h3>
+                                            <p className="text-xs text-white/50 font-light mt-3 leading-relaxed line-clamp-3">
+                                                {item.tomTat}
+                                            </p>
+                                        </div>
+                                        <div className="mt-6 pt-4 border-t border-white/5 flex justify-between items-center">
+                                            <span className="text-[11px] text-white/40 italic font-light">Khoa học chạy bộ</span>
+                                            <span className="text-xs text-yellow-400 font-bold group-hover:translate-x-1 transition-transform duration-200">Đọc bài →</span>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                        /* PLACEHOLDER_FOR_SECTIONS */
+                        /* ========================================================== */
+
+                    </div>
+                </div>
+            );
+        };
+
+        // Tìm điểm gốc và Render ứng dụng vào trang web thực tế
+        const domContainer = document.getElementById('root');
+        const reactRoot = ReactDOM.createRoot(domContainer);
+        reactRoot.render(<MainApplication />);
+    </script>
+</body>
+</html>
+
