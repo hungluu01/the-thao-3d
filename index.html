@@ -1,15 +1,16 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pulse Space | Deep Galactic Command Terminal</title>
+    <title>PULSE.RUN | Next-Gen 3D Athletics & Content Management Platform</title>
+    <meta name="description" content="Nền tảng chạy bộ thế hệ mới - Phân tích sinh trắc học chuyển động và quản trị kiến thức thể thao đỉnh cao tương lai.">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2 family=Barlow:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -25,58 +26,63 @@
         ::-webkit-scrollbar-track { background: #020204; }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 99px; }
         
-        /* HIỆU ỨNG KÍNH LỎNG KHÚC XẠ PHẦN CỨNG */
+        /* ĐỒ HỌA KÍNH LỎNG SIÊU THỰC HƯỚNG TƯƠNG LAI */
         .liquid-card {
             background: rgba(255, 255, 255, 0.01);
-            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.07);
-            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05), 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05), 0 30px 60px rgba(0,0,0,0.8);
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .liquid-card:hover {
-            border-color: rgba(255, 255, 255, 0.18);
+            border-color: rgba(255, 255, 255, 0.2);
             background: rgba(255, 255, 255, 0.02);
-            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.12), 0 35px 60px -10px rgba(0, 0, 0, 0.9);
+            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.15), 0 40px 80px rgba(0,0,0,0.9);
         }
         .liquid-nav {
-            background: rgba(255, 255, 255, 0.02);
+            background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.09);
             box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
         }
         .glow-btn {
             background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(8px);
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .glow-btn:hover {
-            background: #ffffff; color: #000000; box-shadow: 0 0 30px rgba(255,255,255,0.25);
-            transform: translateY(-1px);
+            background: #ffffff; color: #000000; box-shadow: 0 0 35px rgba(255,255,255,0.35);
         }
-
-        /* HỆ THỐNG HẠT KHÔNG GIAN TỰ ĐỘNG KHÔNG LAG */
-        .starfield { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 1; }
-        .star { position: absolute; background: #fff; border-radius: 50%; opacity: 0; animation: pulseStar 4s infinite ease-in-out; }
-        @keyframes pulseStar {
-            0%, 100% { opacity: 0; transform: scale(0.5); }
-            50% { opacity: 0.6; transform: scale(1.2); }
+        .editor-input {
+            background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); color: white;
+            transition: all 0.3s ease;
+        }
+        .editor-input:focus { border-color: rgba(255,255,255,0.25); background: rgba(255,255,255,0.04); outline: none; }
+        
+        .dust-field { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 1; }
+        .particle { position: absolute; background: rgba(255,255,255,0.35); border-radius: 50%; opacity: 0; animation: floatDust 7s infinite linear; }
+        @keyframes floatDust {
+            0% { opacity: 0; transform: translateY(80px) scale(0.4); }
+            50% { opacity: 0.4; }
+            100% { opacity: 0; transform: translateY(-120px) scale(1.1); }
         }
     </style>
 </head>
 <body>
-    <div class="starfield" id="starfield"></div>
+    <div class="dust-field" id="dustField"></div>
     <script>
-        const container = document.getElementById('starfield');
-        for (let i = 0; i < 80; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            star.style.width = `${Math.random() * 2 + 0.5}px`;
-            star.style.height = star.style.width;
-            star.style.left = `${Math.random() * 100}%`;
-            star.style.top = `${Math.random() * 100}%`;
-            star.style.animationDelay = `${Math.random() * 4}s`;
-            container.appendChild(star);
+        const field = document.getElementById('dustField');
+        for (let i = 0; i < 50; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.width = `${Math.random() * 2.5 + 0.5}px`;
+            p.style.height = p.style.width;
+            p.style.left = `${Math.random() * 100}%`;
+            p.style.top = `${Math.random() * 100}%`;
+            p.style.animationDelay = `${Math.random() * 5}s`;
+            p.style.animationDuration = `${Math.random() * 4 + 4}s`;
+            field.appendChild(p);
         }
     </script>
 
@@ -86,127 +92,127 @@
         const { useState, useEffect, useRef, createContext, useContext } = React;
         const AppContext = createContext();
 
-        // Khởi tạo vector đồ họa SVG chuẩn hóa mã máy
-        const ArrowRightIcon = () => React.createElement('svg', { className: 'w-4 h-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1', fill: 'none', stroke: 'currentColor', strokeWidth: '2', viewBox: '0 0 24 24' }, React.createElement('line', { x1: '7', y1: '17', x2: '17', y2: '7' }), React.createElement('polyline', { points: '7 7 17 7 17 17' }));
-        const PlayIcon = () => React.createElement('svg', { className: 'w-3.5 h-3.5 fill-current', viewBox: '0 0 24 24' }, React.createElement('polygon', { points: '6,4 20,12 6,20' }));
-        
-        const HardwareVideoBackground = ({ src }) => {
+        const IconArrow = () => React.createElement('svg', { className: 'w-4 h-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1', fill: 'none', stroke: 'currentColor', strokeWidth: '2', viewBox: '0 0 24 24' }, React.createElement('line', { x1: '7', y1: '17', x2: '17', y2: '7' }), React.createElement('polyline', { points: '7 7 17 7 17 17' }));
+        const IconPlay = () => React.createElement('svg', { className: 'w-3.5 h-3.5 fill-current', viewBox: '0 0 24 24' }, React.createElement('polygon', { points: '6,4 20,12 6,20' }));
+
+        const VideoHardwareBg = ({ src }) => {
             const vRef = useRef(null);
             useEffect(() => {
                 if (vRef.current) {
                     vRef.current.style.opacity = '0';
                     vRef.current.addEventListener('loadeddata', () => {
                         vRef.current.style.transition = 'opacity 1.5s ease';
-                        vRef.current.style.opacity = '0.38';
+                        vRef.current.style.opacity = '0.35';
                     });
                 }
             }, [src]);
             return React.createElement('video', { ref: vRef, src: src, className: 'absolute inset-0 w-full h-full object-cover pointer-events-none select-none z-0', muted: true, playsInline: true, loop: true, autoPlay: true, preload: 'auto' });
         };
 
-        const GlobalHeaderNav = () => {
-            const { appState, changeSection } = useContext(AppContext);
-            return React.createElement('nav', { className: 'fixed top-6 left-1/2 -translate-x-1/2 w-[92%] max-w-6xl z-50 flex items-center justify-between px-6 py-3.5 liquid-nav rounded-full' },
-                React.createElement('div', { className: 'font-heading text-2xl italic tracking-tighter text-white font-semibold select-none' }, 'pulse.space'),
+        // THANH ĐIỀU HƯỚNG TÍCH HỢP KHUNG LOGO TỰ TRỊ BO VIỀN CAO CẤP
+        const GlobalNavigation = () => {
+            const { state, setSection, logoUrl, toggleAdmin } = useContext(AppContext);
+            const menuLabels = ['Giới thiệu', 'Kiến thức', 'Giỏ hàng', 'Cộng đồng', 'Liên hệ'];
+            return React.createElement('nav', { className: 'fixed top-6 left-1/2 -translate-x-1/2 w-[94%] max-w-6xl z-50 flex items-center justify-between px-6 py-3 liquid-nav rounded-full' },
+                // Khung chèn hình logo bo viền đặc chủng, chỉ để logo không chứa chữ
+                React.createElement('div', { onClick: toggleAdmin, className: 'w-10 h-10 rounded-full border border-white/15 bg-white/5 flex items-center justify-center overflow-hidden cursor-pointer p-0.5 shadow-inner' },
+                    logoUrl ? React.createElement('img', { src: logoUrl, alt: 'Logo', className: 'w-full h-full object-cover rounded-full' }) : React.createElement('div', { className: 'w-3 h-3 rounded-full bg-white/40 animate-pulse' })
+                ),
                 React.createElement('div', { className: 'hidden md:flex items-center gap-1' },
-                    ['Overview', 'Capabilities', 'Fleet Tech Matrix', 'Quantum Control'].map((label, index) => 
-                        React.createElement('button', { key: label, onClick: () => changeSection(index), className: 'px-4 py-2 text-[10px] font-semibold tracking-widest uppercase transition-all duration-300 ' + (appState.activeSection === index ? 'text-white' : 'text-white/40 hover:text-white') }, label)
+                    menuLabels.map((label, idx) => 
+                        React.createElement('button', { key: label, onClick: () => setSection(idx), className: 'px-4 py-2 text-[10.5px] font-bold tracking-widest uppercase transition-all duration-300 ' + (state.currentSection === idx ? 'text-white' : 'text-white/40 hover:text-white') }, label)
                     )
                 ),
-                React.createElement('button', { onClick: () => changeSection(3), className: 'px-5 py-2 text-[10px] font-bold tracking-widest uppercase rounded-full bg-white text-black transition-transform duration-300 hover:scale-105' }, 'Reserve Ticket')
+                React.createElement('button', { onClick: () => setSection(1), className: 'px-5 py-2 text-[10px] font-bold tracking-widest uppercase rounded-full bg-white text-black transition-transform duration-300 hover:scale-105' }, 'Gia Nhập')
             );
         };
 
-        const SectionHeroViewport = () => {
-            const { changeSection } = useContext(AppContext);
+        const ComponentHero = () => {
+            const { setSection } = useContext(AppContext);
             return React.createElement('section', { className: 'relative w-full min-h-screen flex flex-col justify-between items-center pt-44 pb-16 px-6 overflow-hidden z-10' },
-                React.createElement(HardwareVideoBackground, { src: 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260418_080021_d598092b-c4c2-4e53-8e46-94cf9064cd50.mp4' }),
+                React.createElement(VideoHardwareBg, { src: 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260418_080021_d598092b-c4c2-4e53-8e46-94cf9064cd50.mp4' }),
                 React.createElement('div', { className: 'relative z-10 max-w-4xl text-center flex flex-col items-center my-auto' },
                     React.createElement('div', { className: 'px-4 py-1.5 rounded-full liquid-nav text-[10px] font-bold tracking-widest uppercase text-white/80 mb-8 flex items-center gap-2 select-none' },
-                        React.createElement('span', { className: 'w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping' }), 'Sub-Orbital Corridors Fully Certified [2026]'
+                        React.createElement('span', { className: 'w-1.5 h-1.5 rounded-full bg-orange-500 animate-ping' }), 'Phòng Thí Nghiệm Sinh Trắc Học Động Lực 2026'
                     ),
-                    React.createElement('h1', { className: 'text-5xl md:text-7xl lg:text-8xl font-heading italic text-white leading-[0.85] tracking-[-3px] max-w-3xl mb-8 select-none' }, 'Venture Past Our Sky Across Universe'),
-                    React.createElement('p', { className: 'text-xs md:text-sm text-white/60 font-light max-w-xl leading-relaxed mb-12 tracking-wide' }, 'Discover the universe in ways once unimaginable. Our pioneering vessels and breakthrough engineering bring deep-space exploration within reach—secure, predictable and extraordinary.'),
+                    React.createElement('h1', { className: 'text-5xl md:text-7xl lg:text-8xl font-heading italic text-white leading-[0.85] tracking-[-3px] max-w-3xl mb-8 uppercase' }, 'Bứt Phá Giới Hạn Theo Từng Sải Chân'),
+                    React.createElement('p', { className: 'text-xs md:text-sm text-white/50 font-light max-w-xl leading-relaxed mb-12 tracking-wide' }, 'Trải nghiệm hiệu suất chạy bộ đỉnh cao được phân tích chính xác đến từng mili-giây. Hệ thống đệm bẻ cong phản lực và sợi carbon sinh học định hình lại hoàn toàn tốc độ và dòng chảy năng lượng của bạn.'),
                     React.createElement('div', { className: 'flex flex-wrap justify-center items-center gap-6' },
-                        React.createElement('button', { onClick: () => changeSection(2), className: 'group px-6 py-4 rounded-full glow-btn text-[10px] font-bold tracking-widest uppercase flex items-center gap-2' }, 'Examine Fleet Matrix', React.createElement(ArrowRightIcon)),
-                        React.createElement('a', { href: '#', className: 'flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase text-white/70 hover:text-white transition-colors' }, React.createElement(PlayIcon), 'Telemetry Feed')
+                        React.createElement('button', { onClick: () => setSection(1), className: 'group px-6 py-4 rounded-full glow-btn text-[10px] font-bold tracking-widest uppercase flex items-center gap-2' }, 'Khám Phá Kiến Thức', React.createElement(IconArrow)),
+                        React.createElement('a', { href: '#', className: 'flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase text-white/70 hover:text-white transition-colors' }, React.createElement(IconPlay), 'Xem Telemetry Feed')
                     )
                 ),
-                React.createElement('div', { className: 'relative z-10 w-full max-w-5xl border-t border-white/10 pt-8 flex flex-wrap justify-between items-center gap-6 opacity-50 select-none' },
-                    React.createElement('span', { className: 'text-[10px] font-bold tracking-widest uppercase text-white/60' }, 'Approved Deep Launch Consortiums'),
-                    React.createElement('div', { className: 'flex flex-wrap gap-8 md:gap-14 font-heading italic text-xl md:text-2xl text-white' },
-                        ['Aeon Labs', 'Vela Aerospace', 'Apex Orbital', 'Zeno Space Systems'].map(title => React.createElement('span', { key: title }, title))
+                React.createElement('div', { className: 'relative z-10 w-full max-w-5xl border-t border-white/10 pt-8 flex flex-wrap justify-between items-center gap-6 opacity-40 select-none' },
+                    React.createElement('span', { className: 'text-[10px] font-bold tracking-widest uppercase text-white/60' }, 'Đối Tác Giải Chạy Marathon Quốc Tế 2026'),
+                    React.createElement('div', { className: 'flex flex-wrap gap-8 md:gap-14 font-heading italic text-xl md:text-2xl text-white uppercase tracking-wider' },
+                        ['Aero Pace', 'Kinetic Lab', 'Apex Trail', 'Velo Sprint'].map(t => React.createElement('span', { key: t }, t))
                     )
                 )
             );
         };
-        // 2. Phân khu 2: Capabilities Matrix - Hệ thống lõi nâng cao
-        const SectionCapabilitiesMatrix = () => {
-            const items = [
-                { title: 'AI Scenery Engine', desc: 'Simulating complex exoplanet atmospheres and custom deep-space coordinate systems instantly.', tag: 'Quantum Core', specs: ['Accuracy: 99.98%', 'Latency: <2ms'] },
-                { title: 'Mass Batch Production', desc: 'Deploy entire fleets with standardized tactical data layouts and structural telemetry.', tag: 'Automated', specs: ['Throughput: Infinite', 'Validation: Realtime'] },
-                { title: 'Dynamic Smart Lighting', desc: 'Ray-tracing physical illumination curves across binary star clusters and nebulae.', tag: 'GPU Matrix', specs: ['Core: RT Quantum', 'Precision: Float64'] }
+
+        // TRANG CHỦ MỞ RỘNG: GIỚI THIỆU KHÁI QUÁT, GIÁ TRỊ CỐT LÕI & ĐỊNH HƯỚNG TƯƠNG LAI
+        const ComponentAboutHome = () => {
+            const cores = [
+                { title: 'Tốc Độ Định Hình', desc: 'Thiết lập các phép đo sinh trắc học thời gian thực nhằm tối ưu sải chân và giải phóng áp lực cơ học.' },
+                { title: 'Định Hướng Tương Lai', desc: 'Bứt phá cấu trúc vật liệu giày, đưa công nghệ dệt sợi carbon thích ứng vào thực tế tập luyện.' },
+                { title: 'Cộng Đồng Động Lực', desc: 'Kết nối mạng lưới hàng triệu vận động viên chuyên nghiệp xuyên biên giới, chia sẻ giáo án tối tân.' }
             ];
-            return React.createElement('section', { className: 'relative w-full min-h-section flex flex-col justify-center py-32 px-6 md:px-16 border-t border-white/5 bg-zinc-950/40 z-10' },
-                React.createElement(HardwareVideoBackground, { src: 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260418_094631_d30ab262-45ee-4b7d-99f3-5d5848c8ef13.mp4' }),
-                React.createElement('div', { className: 'relative z-10 max-w-6xl mx-auto w-full' },
-                    React.createElement('span', { className: 'text-[10px] font-bold tracking-widest uppercase text-white/40 block mb-4' }, '// DEEP CAPABILITIES MATRIX'),
-                    React.createElement('h2', { className: 'font-heading italic text-5xl md:text-7xl lg:text-[5.5rem] text-white leading-none tracking-tight mb-20' }, 'Production Evolved.'),
+            return React.createElement('section', { className: 'relative w-full py-32 px-6 md:px-16 border-t border-white/5 bg-zinc-950/30 z-10' },
+                React.createElement('div', { className: 'max-w-6xl mx-auto w-full' },
+                    React.createElement('span', { className: 'text-[10px] font-bold tracking-widest uppercase text-white/40 block mb-4' }, '// TỔNG QUAN & ĐỊNH HƯỚNG PHÁT TRIỂN'),
+                    React.createElement('div', { className: 'grid grid-cols-1 lg:grid-cols-12 gap-12 items-start mb-24' },
+                        React.createElement('h2', { className: 'font-heading italic text-5xl md:text-7xl text-white leading-none tracking-tight lg:col-span-7 uppercase' }, 'Giá Trị Cốt Lõi\n& Hệ Sinh Thái Thể Thao.'),
+                        React.createElement('p', { className: 'text-xs md:text-sm text-white/50 font-light leading-relaxed lg:col-span-5 pt-2' }, 'PULSE.RUN không đơn thuần là một trang thông tin, chúng tôi là trạm chỉ huy tối tân kết nối dữ liệu chuyển động cơ thể, giải pháp vật lý giày và kho tàng kiến thức chuẩn khoa học nhằm bảo vệ, kích hoạt trạng thái bứt tốc vô hạn của người chạy.')
+                    ),
                     React.createElement('div', { className: 'grid grid-cols-1 md:grid-cols-3 gap-8 w-full' },
-                        items.map(item => React.createElement('div', { key: item.title, className: 'liquid-card rounded-2xl p-7 min-h-[320px] flex flex-col justify-between' },
-                            React.createElement('div', { className: 'flex justify-between items-start' },
-                                React.createElement('div', { className: 'w-2 h-2 rounded-full bg-white/30' }),
-                                React.createElement('span', { className: 'px-3 py-0.5 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold tracking-wider text-white/60 uppercase' }, item.tag)
-                            ),
-                            React.createElement('div', { className: 'mt-8' },
-                                React.createElement('h3', { className: 'font-heading italic text-3xl text-white tracking-wide mb-3' }, item.title),
-                                React.createElement('p', { className: 'text-xs text-white/50 font-light leading-relaxed mb-6' }, item.desc),
-                                React.createElement('div', { className: 'flex gap-3 border-t border-white/5 pt-4' },
-                                    item.specs.map(s => React.createElement('span', { key: s, className: 'text-[10px] font-medium font-body text-white/40' }, s))
-                                )
+                        cores.map(c => React.createElement('div', { key: c.title, className: 'liquid-card rounded-2xl p-8 min-h-[260px] flex flex-col justify-between' },
+                            React.createElement('div', { className: 'w-6 h-6 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-[11px] font-bold' }, '•'),
+                            React.createElement('div', null,
+                                React.createElement('h3', { className: 'font-heading italic text-3xl text-white tracking-wide mb-3' }, c.title),
+                                React.createElement('p', { className: 'text-xs text-white/50 font-light leading-relaxed' }, c.desc)
                             )
                         ))
                     )
                 )
             );
         };
-
-        // 3. Phân khu 3: Fleet Tech Matrix Đồ sộ (Đã mở rộng kho thông số kỹ thuật)
-        const SectionFleetTechMatrix = () => {
-            const [tab, setTab] = useState(0);
-            const ships = [
-                { name: 'Aetheris-X1', class: 'Scout Vanguard', range: '14.8 Light Years', speed: 'Mach 450', drive: 'Quantum Induction v4', payload: '12,500 Metric Tons', hull: 'Titanium-Graphene Matrix' },
-                { name: 'Chronos Heavy', class: 'Cargo Dreadnought', range: '4.2 Light Years', speed: 'Mach 120', drive: 'Dark Matter Plasma Grid', payload: '850,000 Metric Tons', hull: 'Degenerate Matter Shielding' },
-                { name: 'Vela Horizon', class: 'Deep Space Explorer', range: '45.0 Light Years', speed: 'Warp Factor 2.4', drive: 'Alcubierre Singularity Core', payload: '45,000 Metric Tons', hull: 'Polarized Gravitational Shell' }
+        // TRANG CHỦ: KHU TRƯNG BÀY CÁC SẢN PHẨM LIÊN QUAN HIGH-END (SHOE EXHIBITION GRID)
+        const ComponentProductsHome = () => {
+            const [selectedTab, setSelectedTab] = useState(0);
+            const products = [
+                { name: 'AeroPace Elite v1', class: 'Siêu Giày Đua Marathon', drop: '4mm', weight: '165g', upper: 'Sợi Dệt Sinh Học AtomKnit', plate: 'Đĩa Đệm Carbon Wave 3D', foam: 'Đệm Khí Lỏng Nitro-Foam' },
+                { name: 'Kinetic Trail-X', class: 'Chạy Địa Hình / Kháng Nước', drop: '6mm', weight: '240g', upper: 'Vải Ripstop Chống Rách Matrix', plate: 'Khung Nhựa TPU Bảo Vệ Gót', foam: 'Đệm Kép Eva-Pro Hấp Thụ Lực' },
+                { name: 'Velo Sprint Carbon', class: 'Bứt Tốc Cự Ly Ngắn', drop: '0mm', weight: '140g', upper: 'Lưới Đơn Sợi Siêu Thoáng', plate: 'Đĩa Carbon Toàn Chiều Dài Lực', foam: 'Đệm Siêu Phản Hồi AeroJet' }
             ];
-            return React.createElement('section', { className: 'relative w-full min-h-screen flex flex-col justify-center py-32 px-6 md:px-16 border-t border-white/5 z-10' },
-                React.createElement('div', { className: 'relative z-10 max-w-6xl mx-auto w-full' },
-                    React.createElement('span', { className: 'text-[10px] font-bold tracking-widest uppercase text-white/40 block mb-4' }, '// ARCHITECTURE EXHIBITION MATRIX'),
-                    React.createElement('h2', { className: 'font-heading italic text-5xl md:text-7xl lg:text-[5.5rem] text-white leading-none tracking-tight mb-16' }, 'The Vanguard Vessels.'),
-                    React.createElement('div', { className: 'flex border-b border-white/10 mb-16 overflow-x-auto gap-8' },
-                        ships.map((s, idx) => React.createElement('button', { key: s.name, onClick: () => setTab(idx), className: 'pb-4 text-xs font-bold tracking-widest uppercase transition-all whitespace-nowrap ' + (tab === idx ? 'text-white border-b-2 border-white' : 'text-white/30 hover:text-white') }, s.name))
+            return React.createElement('div', { className: 'relative w-full py-24 border-t border-white/5 bg-black/40 z-10' },
+                React.createElement('div', { className: 'max-w-6xl mx-auto w-full px-6' },
+                    React.createElement('span', { className: 'text-[10px] font-bold tracking-widest uppercase text-white/40 block mb-4' }, '// PHÒNG TRƯNG BÀY SẢN PHẨM HIGH-END'),
+                    React.createElement('h2', { className: 'font-heading italic text-5xl md:text-7xl text-white leading-none tracking-tight mb-16 uppercase' }, 'Thiết Bị Động Lực Học.'),
+                    React.createElement('div', { className: 'flex border-b border-white/10 mb-12 overflow-x-auto gap-8' },
+                        products.map((p, i) => React.createElement('button', { key: p.name, onClick: () => setSelectedTab(i), className: 'pb-4 text-xs font-bold tracking-widest uppercase transition-all whitespace-nowrap ' + (selectedTab === i ? 'text-white border-b-2 border-white' : 'text-white/30 hover:text-white') }, p.name))
                     ),
                     React.createElement('div', { className: 'grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch' },
                         React.createElement('div', { className: 'liquid-card rounded-3xl p-8 md:p-12 lg:col-span-7 flex flex-col justify-between' },
                             React.createElement('div', null,
-                                React.createElement('span', { className: 'text-[10px] font-bold uppercase tracking-widest text-emerald-400' }, ships[tab].class),
-                                React.createElement('h3', { className: 'font-heading italic text-5xl md:text-6xl text-white tracking-tighter mt-3 mb-6' }, ships[tab].name),
-                                React.createElement('p', { className: 'text-xs md:text-sm text-white/50 font-light leading-relaxed max-w-xl' }, 'Engineered for absolute operational resilience under extreme spatial distortion curves and quantum pressure differentials. Integrates autonomous navigational flight arrays.')
+                                React.createElement('span', { className: 'text-[10px] font-bold uppercase tracking-widest text-orange-400 font-body' }, products[selectedTab].class),
+                                React.createElement('h3', { className: 'font-heading italic text-5xl md:text-6xl text-white tracking-tighter mt-3 mb-6 uppercase' }, products[selectedTab].name),
+                                React.createElement('p', { className: 'text-xs md:text-sm text-white/50 font-light leading-relaxed max-w-xl' }, 'Dòng sản phẩm cao cấp cấu trúc trên phòng thí nghiệm cơ sinh học, tối ưu hóa năng lượng phản hồi, hỗ trợ guồng chân sải rộng và triệt tiêu chấn thương gót chân tuyệt đối.')
                             ),
                             React.createElement('div', { className: 'grid grid-cols-2 gap-6 border-t border-white/10 pt-8 mt-12' },
-                                React.createElement('div', null, React.createElement('div', { className: 'text-[9px] uppercase tracking-widest text-white/40 font-bold' }, 'Operational Range'), React.createElement('div', { className: 'text-2xl font-heading italic text-white mt-1' }, ships[tab].range)),
-                                React.createElement('div', null, React.createElement('div', { className: 'text-[9px] uppercase tracking-widest text-white/40 font-bold' }, 'Max Cruise Velocity'), React.createElement('div', { className: 'text-2xl font-heading italic text-white mt-1' }, ships[tab].speed))
+                                React.createElement('div', null, React.createElement('div', { className: 'text-[9px] uppercase tracking-widest text-white/40 font-bold' }, 'Độ Dốc Gót-Mũi (Drop)'), React.createElement('div', { className: 'text-2xl font-heading italic text-white mt-1' }, products[selectedTab].drop)),
+                                React.createElement('div', null, React.createElement('div', { className: 'text-[9px] uppercase tracking-widest text-white/40 font-bold' }, 'Trọng Lượng Siêu Nhẹ'), React.createElement('div', { className: 'text-2xl font-heading italic text-white mt-1' }, products[selectedTab].weight))
                             )
                         ),
-                        React.createElement('div', { className: 'liquid-card rounded-3xl p-8 lg:col-span-5 flex flex-col justify-between gap-6' },
-                            React.createElement('h4', { className: 'text-[10px] font-bold uppercase tracking-widest text-white/50 border-b border-white/5 pb-3' }, 'Engineering Schematics'),
+                        React.createElement('div', { className: 'liquid-card rounded-3xl p-8 lg:col-span-5 flex flex-col justify-between gap-4' },
+                            React.createElement('h4', { className: 'text-[10px] font-bold uppercase tracking-widest text-white/50 border-b border-white/5 pb-3' }, 'Thông Số Công Nghệ Sợi / Đế'),
                             [
-                                { label: 'Propulsion Mechanics', val: ships[tab].drive },
-                                { NetMass: 'Net Structural Payload', val: ships[tab].payload },
-                                { label: 'Hull Configuration', val: ships[tab].hull }
-                            ].map((spec, sIdx) => React.createElement('div', { key: sIdx, className: 'border-b border-white/5 pb-3 last:border-0' },
-                                React.createElement('div', { className: 'text-[9px] text-white/30 uppercase tracking-wider' }, spec.label || spec.NetMass),
-                                React.createElement('div', { className: 'text-sm text-white/90 font-medium mt-1 font-body' }, spec.val)
+                                { label: 'Cấu Trúc Thân Trên (Upper)', val: products[selectedTab].upper },
+                                { label: 'Hệ Thống Đĩa Đệm (Plate)', val: products[selectedTab].plate },
+                                { label: 'Công Nghệ Bọt Đệm (Foam)', val: products[selectedTab].foam }
+                            ].map((spec, sIdx) => React.createElement('div', { key: sIdx, className: 'border-b border-white/5 pb-2.5 last:border-0' },
+                                React.createElement('div', { className: 'text-[9px] text-white/30 uppercase tracking-wider' }, spec.label),
+                                React.createElement('div', { className: 'text-xs text-white/80 font-medium mt-1 font-body' }, spec.val)
                             ))
                         )
                     )
@@ -214,47 +220,148 @@
             );
         };
 
-        // 4. Phân khu 4: Bảng điều khiển đặt vé (Quantum Control Portal)
-        const SectionQuantumControl = () => {
-            const [status, setStatus] = useState(false);
-            return React.createElement('section', { className: 'relative w-full min-h-screen flex flex-col justify-center py-32 px-6 border-t border-white/5 bg-zinc-950/20 z-10' },
-                React.createElement('div', { className: 'relative z-10 max-w-xl mx-auto w-full text-center' },
-                    React.createElement('span', { className: 'text-[10px] font-bold tracking-widest uppercase text-white/40 block mb-4' }, '// SECURE TRANSMISSION LINK'),
-                    React.createElement('h2', { className: 'font-heading italic text-5xl md:text-6xl text-white leading-none tracking-tight mb-6' }, 'Initiate Your Passage'),
-                    React.createElement('p', { className: 'text-xs md:text-sm text-white/50 font-light leading-relaxed mb-12' }, 'Submit your routing coordinates to receive priority tier synchronization code for the 2026 maiden voyage cross-system corridors.'),
-                    status ? 
-                    React.createElement('div', { className: 'liquid-card rounded-2xl p-10 text-center animate-fadeIn' },
-                        React.createElement('div', { className: 'w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-5 text-emerald-400' }, '✓'),
-                        React.createElement('div', { className: 'font-heading italic text-3xl text-white' }, 'Coordinates Secured'),
-                        React.createElement('p', { className: 'text-[10px] text-white/40 font-light mt-3 uppercase tracking-widest' }, 'Check your sub-space network nodes.')
-                    ) :
-                    React.createElement('form', { onSubmit: (e) => { e.preventDefault(); setStatus(true); }, className: 'flex flex-col gap-4' },
-                        React.createElement('input', { type: 'email', required: true, placeholder: 'ENTER SECURE NODE EMAIL', className: 'w-full px-6 py-4.5 rounded-full bg-white/5 border border-white/10 text-white placeholder-white/20 text-[10px] tracking-widest uppercase focus:outline-none focus:border-white/30 font-semibold transition-colors text-center' }),
-                        React.createElement('button', { type: 'submit', className: 'w-full py-4.5 rounded-full bg-white text-black font-bold text-[10px] tracking-widest uppercase transition-transform duration-300 hover:scale-[1.01]' }, 'Authorize Subspace Sync')
+        // PHÂN KHU CHỨC NĂNG 2: KIẾN THỨC / HỆ THỐNG QUẢN TRỊ BÀI VIẾT CHUẨN SEO VÔ HẠN
+        const ComponentKnowledgeCMS = () => {
+            const { showAdmin } = useContext(AppContext);
+            const [posts, setPosts] = useState(() => {
+                const saved = localStorage.getItem('pulse_run_posts');
+                return saved ? JSON.parse(saved) : [
+                    { title: 'Kỹ thuật đáp chân chuẩn sinh trắc học 2026', desc: 'Làm thế nào để tối ưu hóa sải chân góc 45 độ và tăng 15% hiệu suất phản hồi lực.', content: '<p style="text-align: left; font-size: 16px; color: #ffffff;">Đáp chân bằng nửa bàn chân trước giúp hấp thụ phản lực tốt hơn gấp 3 lần so với đáp gót...</p>', date: '31/05/2026' }
+                ];
+            });
+
+            // State trình soạn thảo bài viết mới chuẩn SEO
+            const [newTitle, setNewTitle] = useState('');
+            const [newDesc, setNewDesc] = useState('');
+            const [newContent, setNewContent] = useState('');
+            const [seoStyle, setSeoStyle] = useState({ bold: false, italic: false, align: 'left', color: '#ffffff', size: '16px' });
+
+            const handlePublish = (e) => {
+                e.preventDefault();
+                if (!newTitle || !newContent) return;
+                
+                // Đóng gói nội dung HTML kèm các tùy chỉnh font, màu, căn lề chuẩn SEO
+                const htmlContent = `<p style="text-align: ${seoStyle.align}; font-size: ${seoStyle.size}; color: ${seoStyle.color}; font-weight: ${seoStyle.bold ? 'bold' : 'normal'}; font-style: ${seoStyle.italic ? 'italic' : 'normal'};">${newContent}</p>`;
+                const newPost = { title: newTitle, desc: newDesc, content: htmlContent, date: new Date().toLocaleDateString('vi-VN') };
+                
+                const updated = [newPost, ...posts];
+                setPosts(updated);
+                localStorage.setItem('pulse_run_posts', JSON.stringify(updated));
+                setNewTitle(''); setNewDesc(''); setNewContent('');
+                alert('Đã xuất bản bài viết chuẩn SEO vô hạn thành công!');
+            };
+
+            return React.createElement('section', { className: 'relative w-full py-32 px-6 md:px-16 border-t border-white/5 z-10' },
+                React.createElement('div', { className: 'max-w-6xl mx-auto w-full' },
+                    React.createElement('span', { className: 'text-[10px] font-bold tracking-widest uppercase text-white/40 block mb-4' }, '// TRI THỨC VÀ KIẾN THỨC NỀN TẢNG'),
+                    React.createElement('h2', { className: 'font-heading italic text-5xl md:text-7xl text-white leading-none tracking-tight mb-16 uppercase' }, 'Hạ Tầng Kiến Thức.'),
+                    
+                    // GIAO DIỆN TRÌNH QUẢN TRỊ BÀI VIẾT (CHỈ HIỂN THỊ KHI ĐƯỢC KÍCH HOẠT)
+                    showAdmin && React.createElement('div', { className: 'liquid-card rounded-2xl p-6 md:p-8 border-orange-500/20 mb-16 bg-zinc-950/80' },
+                        React.createElement('h3', { className: 'text-sm font-bold uppercase tracking-widest text-orange-400 mb-6 border-b border-white/5 pb-2' }, 'Trình Quản Trị Bài Viết Chuẩn SEO (Thao Tác Siêu Đơn Giản)'),
+                        React.createElement('form', { onSubmit: handlePublish, className: 'flex flex-col gap-5' },
+                            React.createElement('input', { type: 'text', placeholder: 'Nhập Tiêu đề bài viết (Thẻ H1 tối ưu SEO Google)', value: newTitle, onChange: e => setNewTitle(e.target.value), className: 'w-full p-4 rounded-xl editor-input text-sm uppercase tracking-wider font-semibold' }),
+                            React.createElement('input', { type: 'text', placeholder: 'Mô tả ngắn khái quát bài viết (Thẻ Meta Description)', value: newDesc, onChange: e => setNewDesc(e.target.value), className: 'w-full p-4 rounded-xl editor-input text-xs' }),
+                            
+                            // THANH CÔNG CỤ CHỈNH SỬA TEXT CHUẨN SEO TRỰC QUAN
+                            React.createElement('div', { className: 'flex flex-wrap gap-2 items-center bg-white/5 p-3 rounded-xl border border-white/5' },
+                                React.createElement('button', { type: 'button', onClick: () => setSeoStyle(prev => ({ ...prev, bold: !prev.bold })), className: 'px-3 py-1 text-xs rounded border border-white/10 ' + (seoStyle.bold ? 'bg-white text-black' : 'bg-transparent text-white') }, 'Đậm'),
+                                React.createElement('button', { type: 'button', onClick: () => setSeoStyle(prev => ({ ...prev, italic: !prev.italic })), className: 'px-3 py-1 text-xs rounded border border-white/10 ' + (seoStyle.italic ? 'bg-white text-black' : 'bg-transparent text-white') }, 'Nghiêng'),
+                                React.createElement('select', { value: seoStyle.align, onChange: e => setSeoStyle(prev => ({ ...prev, align: e.target.value })), className: 'bg-black text-white text-xs border border-white/10 rounded p-1' },
+                                    React.createElement('option', { value: 'left' }, 'Căn trái'), React.createElement('option', { value: 'center' }, 'Căn giữa'), React.createElement('option', { value: 'right' }, 'Căn phải')
+                                ),
+                                React.createElement('select', { value: seoStyle.size, onChange: e => setSeoStyle(prev => ({ ...prev, size: e.target.value })), className: 'bg-black text-white text-xs border border-white/10 rounded p-1' },
+                                    React.createElement('option', { value: '14px' }, 'Cỡ nhỏ'), React.createElement('option', { value: '16px' }, 'Cỡ vừa (H3)'), React.createElement('option', { value: '20px' }, 'Cỡ lớn (H2)'), React.createElement('option', { value: '28px' }, 'Tiêu đề lớn (H1)')
+                                ),
+                                React.createElement('select', { value: seoStyle.color, onChange: e => setSeoStyle(prev => ({ ...prev, color: e.target.value })), className: 'bg-black text-white text-xs border border-white/10 rounded p-1' },
+                                    React.createElement('option', { value: '#ffffff' }, 'Chữ Trắng'), React.createElement('option', { value: '#f97316' }, 'Chữ Cam'), React.createElement('option', { value: '#9ca3af' }, 'Chữ Xám')
+                                )
+                            ),
+                            React.createElement('textarea', { rows: '6', placeholder: 'Nhập nội dung bài viết chi tiết...', value: newContent, onChange: e => setNewContent(e.target.value), className: 'w-full p-4 rounded-xl editor-input text-sm font-light leading-relaxed' }),
+                            React.createElement('button', { type: 'submit', className: 'px-6 py-4 rounded-full bg-white text-black font-bold text-[10px] tracking-widest uppercase self-end hover:scale-105 transition-transform' }, 'Xuất Bản Chuẩn SEO')
+                        )
+                    ),
+
+                    // GRID DANH SÁCH BÀI VIẾT ĐÃ ĐƯỢC INDEX
+                    React.createElement('div', { className: 'grid grid-cols-1 md:grid-cols-2 gap-8' },
+                        posts.map((post, pIdx) => React.createElement('div', { key: pIdx, className: 'liquid-card rounded-2xl p-6 flex flex-col justify-between' },
+                            React.createElement('div', null,
+                                React.createElement('div', { className: 'text-[9px] uppercase tracking-widest text-white/30 font-bold font-body mb-2' }, post.date),
+                                React.createElement('h3', { className: 'font-heading italic text-3xl text-white tracking-wide mb-3 uppercase' }, post.title),
+                                React.createElement('p', { className: 'text-xs text-white/50 font-light leading-relaxed mb-6' }, post.desc),
+                                React.createElement('div', { className: 'border-t border-white/5 pt-4 mt-4 text-xs font-light leading-relaxed opacity-90 font-body', dangerouslySetInnerHTML: { __html: post.content } })
+                            )
+                        ))
                     )
                 )
             );
         };
 
-        // 5. Cấu trúc Gốc điều phối ứng dụng (App Core Wrapper)
+        // ĐỒ HỌA FOOTER ĐỊNH HƯỚNG TƯƠNG LAI & KHỐI FACEBOOK WIDGET MOCKUP KÍNH LỎNG
+        const ComponentFooterAthletics = () => {
+            const [fbLink, setFbLink] = useState('https://facebook.com/pulse.run');
+            return React.createElement('footer', { className: 'relative w-full pt-32 pb-16 px-6 md:px-16 border-t border-white/5 bg-zinc-950/60 z-10 font-body' },
+                React.createElement('div', { className: 'max-w-6xl mx-auto w-full grid grid-cols-1 md:grid-cols-12 gap-12 mb-20' },
+                    // Cột 1: Thông tin cơ bản trang
+                    React.createElement('div', { className: 'md:col-span-4' },
+                        React.createElement('div', { className: 'font-heading text-3xl italic tracking-tighter font-black text-white mb-6 uppercase' }, 'pulse.run'),
+                        React.createElement('p', { className: 'text-xs text-white/40 font-light leading-relaxed max-w-sm' }, 'Nền tảng công nghệ thể thao hàng đầu, ứng dụng hạ tầng dữ liệu và nghiên cứu động lực học chuyển động sải chân tương lai.')
+                    ),
+                    // Cột 2 & 3: Địa chỉ và Liên hệ logic chuẩn SEO
+                    React.createElement('div', { className: 'md:col-span-4 grid grid-cols-2 gap-4' },
+                        React.createElement('div', null,
+                            React.createElement('h5', { className: 'text-[10px] font-bold uppercase tracking-widest text-white/60 mb-4' }, 'Hệ thống Trạm'),
+                            React.createElement('p', { className: 'text-xs text-white/40 font-light leading-relaxed' }, 'Khu Đô Thị Công Nghệ Cao,\nThành Phố Hồ Chí Minh,\nViệt Nam.')
+                        ),
+                        React.createElement('div', null,
+                            React.createElement('h5', { className: 'text-[10px] font-bold uppercase tracking-widest text-white/60 mb-4' }, 'Liên Hệ Nodes'),
+                            React.createElement('p', { className: 'text-xs text-white/40 font-light' }, 'Hotline: +84 900 PULSE\nMail: ops@pulse.run')
+                        )
+                    ),
+                    // Cột 4: Mạng xã hội và Facebook Embed Widget Kính Lỏng ở góc bên phải
+                    React.createElement('div', { className: 'md:col-span-4 flex flex-col justify-between items-start md:items-end' },
+                        React.createElement('div', { className: 'w-full max-w-[280px] liquid-card rounded-xl p-4 text-left border-white/10' },
+                            React.createElement('div', { className: 'flex items-center gap-2.5 mb-3' },
+                                React.createElement('div', { className: 'w-7 h-7 rounded-full bg-blue-600/10 border border-blue-500/30 flex items-center justify-center text-xs font-bold text-blue-400' }, 'f'),
+                                React.createElement('div', null,
+                                    React.createElement('div', { className: 'text-[11px] font-bold tracking-wide text-white/90' }, 'PULSE.RUN Fanpage'),
+                                    React.createElement('div', { className: 'text-[9px] text-white/40 font-body' }, '145K Người Theo Dõi')
+                                )
+                            ),
+                            React.createElement('input', { type: 'text', value: fbLink, onChange: e => setFbLink(e.target.value), className: 'w-full p-2 rounded bg-black/40 border border-white/5 text-[9px] text-white/50 mb-3 focus:outline-none focus:border-white/20' }),
+                            React.createElement('a', { href: fbLink, target: '_blank', rel: 'noopener noreferrer', className: 'w-full py-2 bg-white/5 border border-white/10 text-center block text-[10px] font-bold tracking-widest text-white rounded-lg hover:bg-white hover:text-black transition-colors uppercase' }, 'Ghé thăm Fanpage')
+                        )
+                    )
+                ),
+                React.createElement('div', { className: 'max-w-6xl mx-auto w-full border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 select-none opacity-30 text-[10px] font-medium tracking-widest text-white/60' },
+                    React.createElement('span', null, '© 2026 PULSE.RUN. ALL RIGHTS RESERVED.'),
+                    React.createElement('span', null, 'FUTURE-READY ARCHITECTURE')
+                )
+            );
+        };
+
+        // BỘ ĐIỀU PHỐI VÒNG ĐỜI VÀ TRẠNG THÁI TOÀN CỤC (APP CORE)
         const App = () => {
-            const [appState, setAppState] = useState({ activeSection: 0 });
-            const elementsRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
+            const [state, setState] = useState({ currentSection: 0 });
+            const [showAdmin, setShowAdmin] = useState(false);
+            const [logoUrl, setLogoUrl] = useState('https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&w=150&q=80');
+            const sectionRefs = [useRef(null), useRef(null), useRef(null), useRef(null), useRef(null)];
             
-            const changeSection = (index) => {
-                setAppState({ activeSection: index });
-                if (elementsRefs[index] && elementsRefs[index].current) {
-                    elementsRefs[index].current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            const setSection = (idx) => {
+                setState({ currentSection: idx });
+                if (sectionRefs[idx] && sectionRefs[idx].current) {
+                    sectionRefs[idx].current.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             };
+            const toggleAdmin = () => setShowAdmin(!showAdmin);
 
-            return React.createElement(AppContext.Provider, { value: { appState, changeSection } },
+            return React.createElement(AppContext.Provider, { value: { state, setSection, logoUrl, showAdmin, toggleAdmin } },
                 React.createElement('main', { className: 'relative w-full bg-[#020204] overflow-hidden' },
-                    React.createElement(GlobalHeaderNav, null),
-                    React.createElement('div', { ref: elementsRefs[0] }, React.createElement(SectionHeroViewport, null)),
-                    React.createElement('div', { ref: elementsRefs[1] }, React.createElement(SectionCapabilitiesMatrix, null)),
-                    React.createElement('div', { ref: elementsRefs[2] }, React.createElement(SectionFleetTechMatrix, null)),
-                    React.createElement('div', { ref: elementsRefs[3] }, React.createElement(SectionQuantumControl, null))
+                    React.createElement(GlobalNavigation, null),
+                    React.createElement('div', { ref: sectionRefs[0] }, React.createElement(ComponentHero, null)),
+                    React.createElement('div', { ref: sectionRefs[1] }, React.createElement(ComponentAboutHome, null), React.createElement(ComponentProductsHome, null)),
+                    React.createElement('div', { ref: sectionRefs[2] }, React.createElement(ComponentKnowledgeCMS, null)),
+                    React.createElement('div', { ref: sectionRefs[3] }, React.createElement(ComponentFooterAthletics, null))
                 )
             );
         };
