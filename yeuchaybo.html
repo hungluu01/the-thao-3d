@@ -110,13 +110,162 @@
                 chiTiet: "Áp dụng ngay phác đồ R.I.C.E kết hợp các bài tập squat một chân, giãn cơ mông nhỡ định kỳ sau mỗi buổi chạy dài."
             }
         ];
+                /* ========================================================================= */
+        /* [VÙNG CHÈN HOẶC BỔ SUNG CÁC MÔ-ĐUN/HÀM TRONG TƯƠNG LAI - KHÔNG ĐƯỢC XÓA] */
+
+        // Lõi xử lý đồ họa vật lý hạt bụi quán tính cao cấp (Extra Particle Physics)
+        const FluidParticleBackground = () => {
+            const canvasRef = useRef(null);
+
+            useEffect(() => {
+                const canvas = canvasRef.current;
+                const ctx = canvas.getContext('2d');
+                let animationFrameId;
+                let particleArray = [];
+                
+                // Cấu hình bán kính tương tác của chuột và lực quán tính
+                const mouseTracking = {
+                    x: null,
+                    y: null,
+                    radius: 150,
+                    active: false
+                };
+
+                const handleResize = () => {
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                    createParticlesSystem();
+                };
+
+                // Lớp định nghĩa thuộc tính và hành vi vật lý từng hạt bụi
+                class AdvancedParticle {
+                    constructor(x, y) {
+                        this.x = x;
+                        this.y = y;
+                        this.baseX = x;
+                        this.baseY = y;
+                        // Vận tốc thực tế của hạt
+                        this.vx = 0;
+                        this.vy = 0;
+                        this.size = Math.random() * 2.5 + 0.5;
+                        // Hệ số mật độ/khối lượng tạo gia tốc ngẫu nhiên cho từng hạt
+                        this.particleMass = (Math.random() * 25) + 15;
+                        // Lực ma sát môi trường để hạt dừng lại mượt mà
+                        this.friction = 0.92;
+                        // Lực đàn hồi kéo hạt về vị trí cũ
+                        this.springFactor = 0.04;
+                        this.brightness = Math.random() * 0.4 + 0.3;
+                    }
+
+                    draw() {
+                        ctx.fillStyle = `rgba(234, 179, 8, ${this.brightness})`;
+                        ctx.shadowColor = 'rgba(234, 179, 8, 0.3)';
+                        ctx.shadowBlur = this.size * 2;
+                        ctx.beginPath();
+                        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                        ctx.closePath();
+                        ctx.fill();
+                    }
+
+                    updatePhysics() {
+                        // 1. Tính toán lực đẩy của trỏ chuột (Vectơ khoảng cách)
+                        let dx = mouseTracking.x - this.x;
+                        let dy = mouseTracking.y - this.y;
+                        let distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (mouseTracking.active && distance < mouseTracking.radius) {
+                            // Tính toán gia tốc đẩy dựa trên khoảng cách (gần đẩy mạnh, xa đẩy nhẹ)
+                            let forceFactor = (mouseTracking.radius - distance) / mouseTracking.radius;
+                            let pushForce = forceFactor * 8; // Cường độ đẩy cực đại
+                            
+                            let directionX = (dx / distance) * pushForce;
+                            let directionY = (dy / distance) * pushForce;
+                            
+                            // Trừ vận tốc tạo lực dạt ra xa
+                            this.vx -= directionX;
+                            this.vy -= directionY;
+                        } else {
+                            // 2. Lực đàn hồi kéo hạt bụi quay lại điểm neo ban đầu khi chuột đi qua
+                            let returnDistX = this.baseX - this.x;
+                            let returnDistY = this.baseY - this.y;
+                            
+                            this.vx += returnDistX * this.springFactor;
+                            this.vy += returnDistY * this.springFactor;
+                        }
+
+                        // 3. Áp dụng ma sát để triệt tiêu năng lượng dư thừa, chống rung lắc vô hạn
+                        this.vx *= this.friction;
+                        this.vy *= this.friction;
+
+                        // 4. Cập nhật tọa độ thực tế của hạt bụi
+                        this.x += this.vx;
+                        this.y += this.vy;
+                    }
+                }
+
+                const createParticlesSystem = () => {
+                    particleArray = [];
+                    // Tối ưu mật độ hạt trên diện tích màn hình để đảm bảo 60fps mượt mà
+                    const densityDivider = window.innerWidth < 768 ? 6000 : 3500;
+                    const maxParticlesCount = (canvas.width * canvas.height) / densityDivider;
+                    
+                    for (let i = 0; i < maxParticlesCount; i++) {
+                        let randomX = Math.random() * canvas.width;
+                        let randomY = Math.random() * canvas.height;
+                        particleArray.push(new AdvancedParticle(randomX, randomY));
+                    }
+                };
+
+                const loopRender = () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.shadowBlur = 0; // Reset bóng đổ để tối ưu hiệu năng vòng lặp
+                    
+                    for (let i = 0; i < particleArray.length; i++) {
+                        particleArray[i].updatePhysics();
+                        particleArray[i].draw();
+                    }
+                    animationFrameId = requestAnimationFrame(loopRender);
+                };
+
+                // Gắn các sự kiện lắng nghe tọa độ di chuột
+                const onMouseMove = (e) => {
+                    mouseTracking.x = e.clientX;
+                    mouseTracking.y = e.clientY;
+                    mouseTracking.active = true;
+                };
+
+                const onMouseLeave = () => {
+                    mouseTracking.active = false;
+                };
+
+                window.addEventListener('resize', handleResize);
+                window.addEventListener('mousemove', onMouseMove);
+                window.addEventListener('mouseleave', onMouseLeave);
+
+                // Khởi động hệ thống
+                handleResize();
+                loopRender();
+
+                return () => {
+                    window.removeEventListener('resize', handleResize);
+                    window.removeEventListener('mousemove', onMouseMove);
+                    window.removeEventListener('mouseleave', onMouseLeave);
+                    cancelAnimationFrame(animationFrameId);
+                };
+            }, []);
+
+            return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0" />;
+        };
         /* PLACEHOLDER_FOR_FUTURE_FUNCTIONS */
         /* ========================================================================= */
 
         // Thành phần Ứng dụng chính điều phối cấu trúc trang web
         const MainApplication = () => {
             return (
-                <div className="relative min-h-screen w-full">
+                                <div className="relative min-h-screen w-full">
+                    
+                    {/* Bổ sung Lớp hạt bụi vật lý tương tác quán tính cao cấp */}
+                    <FluidParticleBackground />
                     
                     {/* Thanh Điều hướng Đầu trang mặc định */}
                     <nav className="fixed top-4 left-0 right-0 max-w-6xl mx-auto px-6 h-16 rounded-full liquid-glass-panel z-50 flex items-center justify-between mx-4 md:mx-auto">
@@ -217,4 +366,5 @@
     </script>
 </body>
 </html>
+
 
