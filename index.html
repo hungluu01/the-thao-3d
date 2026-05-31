@@ -3,83 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YÊU CHẠY BỘ | Hệ Sinh Thái Động Lực Học Quốc Gia</title>
+    <title>YÊU CHẠY BỘ | Hệ Sinh Thái Động Lực Học</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/@babel/standalone@7.23.12/babel.min.js" crossorigin></script>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,500;0,700;1,800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { heading: ['"Instrument Serif"', 'serif'], body: ['"Barlow"', 'sans-serif'] }
+                    fontFamily: {
+                        heading: ['"Instrument Serif"', 'serif'],
+                        body: ['"Barlow"', 'sans-serif']
+                    }
                 }
             }
         }
     </script>
     <style>
-        body { background-color: #020204; color: #fff; overflow-x: hidden; margin: 0; padding: 0; font-family: 'Barlow', sans-serif; }
-        ::-webkit-scrollbar { width: 4px; }
+        body {
+            background-color: #020204;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            font-family: 'Barlow', sans-serif;
+        }
+        /* Tối ưu thanh cuộn */
+        ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: #020204; }
         ::-webkit-scrollbar-thumb { background: rgba(249, 115, 22, 0.4); border-radius: 99px; }
-        
-        /* GIAO DIỆN KÍNH LỎNG SIÊU ĐẸP NỔI BẬT TRÊN NỀN HẠT */
-        .glass-runner-ui {
-            background: rgba(8, 8, 12, 0.55);
-            backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
-            border: 1px solid rgba(255, 255, 255, 0.07);
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.06);
+
+        /* ĐỊNH DẠNG KHỐI KÍNH GLASSMORPHISM LÊN TRÊN NỀN HẠT */
+        .glass-ui-panel {
+            background: rgba(10, 10, 15, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8), inset 0 1px 0px rgba(255, 255, 255, 0.1);
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .glass-runner-ui:hover {
-            border-color: rgba(249, 115, 22, 0.35);
-            box-shadow: 0 40px 120px rgba(249, 115, 22, 0.06);
-            background: rgba(12, 12, 18, 0.65);
+        .glass-ui-panel:hover {
+            border-color: rgba(249, 115, 22, 0.3);
+            background: rgba(15, 15, 22, 0.75);
         }
-        .orange-neon-text {
-            text-shadow: 0 0 25px rgba(249, 115, 22, 0.5);
+        
+        /* HIỆU ỨNG CHỮ PHÁT SÁNG */
+        .orange-neon-glow {
+            text-shadow: 0 0 30px rgba(249, 115, 22, 0.6);
         }
-        .input-runner-cms {
-            background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255,255,255,0.08); color: white;
+
+        /* NỀN CANVAS BACKGROUND ĐƯỢC ĐẨY RA SAU CÙNG */
+        .telemetry-bg-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 0; /* Ép nằm dưới */
+            pointer-events: none;
+        }
+
+        /* LỚP CHỨA CORE INTERFACE REACT */
+        #root {
+            position: relative;
+            z-index: 10; /* Ép nổi lên trên nền hạt */
+            width: 100%;
+        }
+        
+        .input-dark-field {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
             transition: all 0.3s ease;
         }
-        .input-runner-cms:focus { border-color: #f97316; background: rgba(249,115,22,0.03); outline: none; }
-
-        /* NỀN HẠT CAM ĐỘNG LỰC HỌC ĐÃ ĐƯỢC ĐỒNG BỘ CHUẨN XÁC */
-        .running-canvas-container { position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: 0.9; }
-
-        /* SÓNG CLICK CHUỘT QUANTUM RIPPLE */
-        .ripple-layer {
-            position: fixed; border-radius: 50%; pointer-events: none;
-            transform: translate(-50%, -50%) scale(0); opacity: 1; z-index: 9999;
-        }
-        .ripple-core {
-            border: 2px solid rgba(249, 115, 22, 0.6);
-            background: radial-gradient(circle, rgba(249,115,22,0.2) 0%, rgba(0,0,0,0) 70%);
-            animation: rippleAnimCore 0.7s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
-        }
-        .ripple-aura {
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            animation: rippleAnimAura 0.9s cubic-bezier(0.1, 0.6, 0.2, 1) forwards;
-        }
-        @keyframes rippleAnimCore {
-            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
-            100% { transform: translate(-50%, -50%) scale(14); opacity: 0; }
-        }
-        @keyframes rippleAnimAura {
-            0% { transform: translate(-50%, -50%) scale(0); opacity: 0.7; }
-            100% { transform: translate(-50%, -50%) scale(24); opacity: 0; }
+        .input-dark-field:focus {
+            border-color: #f97316;
+            outline: none;
+            background: rgba(249, 115, 22, 0.02);
         }
     </style>
 </head>
-<body onmousedown="triggerQuantumRipple(event)">
+<body>
 
-    <div class="running-canvas-container">
+    <div class="telemetry-bg-canvas">
         <canvas id="runningTelemetryNet"></canvas>
     </div>
+
+    <div id="root"></div>
 
     <script>
         const canvas = document.getElementById('runningTelemetryNet');
@@ -88,34 +101,30 @@
         let height = canvas.height = window.innerHeight;
 
         const particles = [];
-        const particleCount = 95;
+        const particleCount = 85;
 
         for (let i = 0; i < particleCount; i++) {
             particles.push({
                 x: Math.random() * width,
                 y: Math.random() * height,
-                speedX: Math.random() * 1.8 + 0.6, 
+                speedX: Math.random() * 1.5 + 0.5,
                 speedY: (Math.random() - 0.5) * 0.4,
-                radius: Math.random() * 2.5 + 0.5,
-                alpha: Math.random() * 0.6 + 0.2
+                radius: Math.random() * 2 + 0.5,
+                alpha: Math.random() * 0.5 + 0.2
             });
         }
-
-        let mousePointer = { x: -1000, y: -1000 };
-        document.addEventListener('mousemove', (e) => {
-            mousePointer.x = e.clientX;
-            mousePointer.y = e.clientY;
-        });
 
         function animateTelemetryNet() {
             ctx.clearRect(0, 0, width, height);
             
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.015)';
+            // Vẽ lưới mờ nhẹ tạo không gian sâu
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.01)';
             ctx.lineWidth = 1;
-            for(let x = 0; x < width; x += 70) {
+            for(let x = 0; x < width; x += 80) {
                 ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke();
             }
 
+            // Di chuyển và vẽ hạt
             particles.forEach(p => {
                 p.x += p.speedX;
                 p.y += p.speedY;
@@ -123,17 +132,9 @@
                 if (p.x > width) p.x = 0;
                 if (p.y > height || p.y < 0) p.y = Math.random() * height;
 
-                const dx = mousePointer.x - p.x;
-                const dy = mousePointer.y - p.y;
-                const dist = Math.sqrt(dx*dx + dy*dy);
-                if(dist < 130) {
-                    p.x -= (dx / dist) * 2.5;
-                    p.y -= (dy / dist) * 2.5;
-                }
-
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(249, 115, 22, ${p.alpha})`; 
+                ctx.fillStyle = `rgba(249, 115, 22, ${p.alpha})`;
                 ctx.fill();
             });
 
@@ -145,87 +146,60 @@
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
         });
-
-        function triggerQuantumRipple(e) {
-            const core = document.createElement('div');
-            core.className = 'ripple-layer ripple-core';
-            core.style.left = `${e.clientX}px`; core.style.top = `${e.clientY}px`;
-            core.style.width = '20px'; core.style.height = '20px';
-
-            const aura = document.createElement('div');
-            aura.className = 'ripple-layer ripple-aura';
-            aura.style.left = `${e.clientX}px`; aura.style.top = `${e.clientY}px`;
-            aura.style.width = '20px'; aura.style.height = '20px';
-
-            document.body.appendChild(core);
-            document.body.appendChild(aura);
-
-            core.addEventListener('animationend', () => core.remove());
-            aura.addEventListener('animationend', () => aura.remove());
-        }
     </script>
-
-    <div id="root"></div>
 
     <script type="text/babel">
         const { useState, useEffect, useRef, createContext, useContext } = React;
         const AppContext = createContext();
 
-        // ICONS VECTOR ĐỘNG LỰC HỌC
-        const IconRunningShoe = () => (
-            <svg className="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
-            </svg>
-        );
-
-        // THANH MENU ĐIỀU HƯỚNG CAO CẤP FLOATING NAV
-        const NavigationBarRunner = () => {
-            const { changeSection, logoUrl } = useContext(AppContext);
+        // 1. FIXED NAV BAR (THANH MENU ĐIỀU HƯỚNG LƠ LỬNG)
+        const FloatingNavbar = () => {
+            const { logoUrl, scrollToSection, sectionRefs } = useContext(AppContext);
             return (
-                <nav className="fixed top-6 left-1/2 -translate-x-1/2 w-[92%] max-w-6xl z-50 flex items-center justify-between px-6 py-4 glass-runner-ui rounded-full bg-black/50">
+                <nav className="fixed top-5 left-1/2 -translate-x-1/2 w-[92%] max-w-6xl z-50 flex items-center justify-between px-6 py-4 glass-ui-panel rounded-full bg-black/40">
                     <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-orange-500/20 border border-orange-500/40 flex items-center justify-center overflow-hidden">
+                        <div className="w-8 h-8 rounded-full border border-orange-500/40 overflow-hidden bg-orange-500/10">
                             <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
                         </div>
-                        <span className="font-body font-bold text-xs uppercase tracking-[0.25em] text-white">YÊU CHẠY BỘ<span className="text-orange-500">.NET</span></span>
+                        <span className="font-body font-bold text-xs uppercase tracking-[0.2em] text-white">YÊU CHẠY BỘ<span className="text-orange-500">.NET</span></span>
                     </div>
-                    <div className="hidden md:flex items-center gap-2">
-                        {['Trang Chủ', 'Kho Thiết Bị', 'Tính Toán Pace', 'Trạm CMS Quản Trị'].map((item, idx) => (
-                            <button key={idx} onClick={() => changeSection(idx)} className="px-4 py-1.5 text-[10px] font-bold tracking-widest uppercase text-white/50 hover:text-orange-500 transition-colors">
+                    <div className="hidden md:flex items-center gap-1">
+                        {['Trang Chủ', 'Trang Bị', 'Tính Toán Pace', 'Quản Trị CMS'].map((item, idx) => (
+                            <button key={idx} onClick={() => scrollToSection(idx)} className="px-4 py-1 text-[10px] font-bold tracking-widest uppercase text-white/60 hover:text-orange-500 transition-colors">
                                 {item}
                             </button>
                         ))}
                     </div>
-                    <a href="https://strava.com" target="_blank" rel="noopener noreferrer" className="px-5 py-2 text-[9px] font-bold tracking-widest uppercase rounded-full bg-gradient-to-r from-orange-500 to-amber-600 text-white shadow-lg shadow-orange-500/20 hover:scale-105 transition-transform">
-                        Kết Nối STRAVA
+                    <a href="https://strava.com" target="_blank" rel="noopener noreferrer" className="px-4 py-2 text-[9px] font-bold tracking-widest uppercase rounded-full bg-gradient-to-r from-orange-500 to-amber-600 text-white shadow-lg shadow-orange-500/20 hover:opacity-90 transition-opacity">
+                        KẾT NỐI STRAVA
                     </a>
                 </nav>
             );
         };
 
-        // GIAO DIỆN HERO SECTION CHÍNH HOÀNH TRÁNG
-        const SectionAthleticsHero = () => {
-            const { telemetryStats } = useContext(AppContext);
+        // 2. HERO SECTION (TIÊU ĐỀ HOÀNH TRÁNG & KHỐI CHỈ SỐ CƠ SINH HỌC)
+        const HeroSection = () => {
+            const { metricsData } = useContext(AppContext);
             return (
-                <section className="relative w-full min-h-screen flex flex-col justify-center items-center pt-32 pb-16 px-6 z-10">
+                <section className="relative w-full min-h-screen flex flex-col justify-center items-center pt-32 pb-16 px-6">
                     <div className="max-w-5xl text-center flex flex-col items-center">
-                        <div className="px-4 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/30 text-[9px] font-bold tracking-widest uppercase text-orange-400 mb-6 tracking-widest">
-                            // CỘNG ĐỒNG CHẠY BỘ ĐƯỜNG TRƯỜNG LỚN NHẤT VIỆT NAM
+                        <div className="px-4 py-1 rounded-full bg-orange-500/10 border border-orange-500/20 text-[9px] font-bold tracking-widest uppercase text-orange-400 mb-6">
+                            // MẠNG LƯỚI TRI THỨC VÀ ĐỘNG LỰC HỌC CHẠY BỘ ĐƯỜNG TRƯỜNG
                         </div>
-                        <h1 className="text-5xl md:text-8xl font-heading italic text-white leading-[0.95] tracking-tighter max-w-4xl uppercase mb-6 select-none">
-                            Yêu Chạy Bộ <br/><span className="text-orange-500 orange-neon-text">Bứt Phá</span> Mỗi Sải Chân
+                        <h1 className="text-5xl md:text-8xl font-heading italic text-white leading-[0.95] tracking-tighter max-w-4xl uppercase mb-6">
+                            Yêu Chạy Bộ <br/><span className="text-orange-500 orange-neon-glow">Bứt Phá</span> Mọi Giới Hạn
                         </h1>
-                        <p className="text-xs md:text-sm text-white/50 font-light max-w-xl leading-relaxed mb-14 tracking-wide font-body">
-                            Không gian lưu trữ giáo án chạy bộ chuyên sâu từ 5K, 10K, Half Marathon đến Ultra-Marathon. Kết nối dữ liệu cơ sinh học nâng cao và tối ưu hóa nhịp chân Cadence chuẩn khoa học.
+                        <p className="text-xs md:text-sm text-white/50 font-light max-w-xl leading-relaxed mb-12 tracking-wide font-body">
+                            Không gian lưu trữ giáo án huấn luyện từ cự ly ngắn đến siêu marathon. Theo dõi sát sao các chỉ số cơ sinh học nâng cao để cải thiện sải chân an toàn và tối ưu hóa hiệu suất.
                         </p>
                         
-                        {/* HỘP THÔNG SỐ ĐỘNG LỰC HỌC TRỰC QUAN KHÔNG GIAN TĨNH */}
+                        {/* 4 Khối Số Liệu Trực Quan Đè Lên Canvas */}
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-4xl">
-                            {telemetryStats.map((stat, i) => (
-                                <div key={i} className="glass-runner-ui rounded-2xl p-5 text-left bg-zinc-950/40">
-                                    <div className="text-[9px] text-white/40 uppercase tracking-widest font-bold font-body">{stat.metrics}</div>
+                            {metricsData.map((data, i) => (
+                                <div key={i} className="glass-ui-panel rounded-2xl p-5 text-left">
+                                    <div className="text-[9px] text-white/40 uppercase tracking-widest font-bold font-body">{data.title}</div>
                                     <div className="text-3xl font-heading italic font-bold text-white mt-1 flex items-baseline gap-1">
-                                        {stat.value} <span className="text-[10px] font-body text-orange-500 tracking-normal font-normal">{stat.unit}</span>
+                                        {data.value} <span className="text-[10px] font-body text-orange-500 tracking-normal font-normal">{data.unit}</span>
                                     </div>
                                 </div>
                             ))}
@@ -235,76 +209,66 @@
             );
         };
 
-        // KHU VỰC THIẾT BỊ VÀ GIÀY CAO CẤP CHO RUNNER
-        const SectionShoeCollection = () => {
-            const runnerGears = [
-                { name: 'AeroStride Carbon Elite', category: 'Giày Đua Cự Ly Full Marathon', spec: 'Trọng lượng: 168g | Drop 4mm', desc: 'Sự kết hợp hoàn hảo giữa đĩa sợi carbon toàn chiều dài và siêu bọt khí áp suất cao, tái tạo lực đẩy lên tới 85%.' },
-                { name: 'Terra Trail Matrix-X', category: 'Giày Chạy Địa Hình Siêu Bám', spec: 'Đế cao su đúc Vibram Megagrip', desc: 'Thiết kế gai sâu 5mm thách thức mọi cung đường bùn lầy, đá dốc tại các giải chạy Ultra Trail khắc nghiệt nhất.' }
+        // 3. GEAR COLLECTION SECTION
+        const GearSection = () => {
+            const items = [
+                { title: 'AeroStride Carbon Pro', tags: 'Marathon Race Shoe', desc: 'Đế đệm siêu bọt khí tích hợp tấm carbon nguyên khối hỗ trợ phản hồi lực cực cao trên mỗi bước đáp.' },
+                { title: 'Apex Hydration Vest', tags: 'Trail Running Gear', desc: 'Hệ thống đai ôm sát công thái học dung tích 5L, tối ưu vị trí bình nước mềm chống rung lắc tuyệt đối.' }
             ];
             return (
-                <section className="relative w-full py-24 px-6 md:px-16 border-t border-white/5 z-10 bg-black/20">
-                    <div className="max-w-6xl mx-auto w-full">
-                        <span className="text-[10px] font-bold tracking-widest uppercase text-white/40 block mb-2">// HỆ THỐNG TRANG BỊ ĐỘNG LỰC HỌC</span>
-                        <h2 className="font-heading italic text-4xl md:text-6xl text-white tracking-tight mb-12 uppercase">Vũ Khí Chinh Phục Mọi Giải Chạy.</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {runnerGears.map((gear, idx) => (
-                                <div key={idx} className="glass-runner-ui rounded-3xl p-8 flex flex-col justify-between min-h-[280px]">
-                                    <div>
-                                        <div className="flex justify-between items-start border-b border-white/5 pb-4 mb-4">
-                                            <div>
-                                                <span className="text-[9px] font-bold uppercase tracking-widest text-orange-500">{gear.category}</span>
-                                                <h3 className="font-heading italic text-3xl text-white tracking-wide uppercase mt-1">{gear.name}</h3>
-                                            </div>
-                                        </div>
-                                        <p className="text-xs text-white/40 font-light leading-relaxed mb-6 font-body">{gear.desc}</p>
-                                    </div>
-                                    <div className="text-[10px] font-medium text-white/60 font-mono bg-white/5 px-3 py-2 rounded-xl border border-white/5 w-fit">
-                                        {gear.spec}
-                                    </div>
+                <section className="relative w-full py-24 px-6 max-w-6xl mx-auto">
+                    <span className="text-[10px] font-bold tracking-widest uppercase text-orange-500 block mb-2">// DANH MỤC TRANG BỊ CHUYÊN SÂU</span>
+                    <h2 className="font-heading italic text-4xl md:text-6xl text-white tracking-tight mb-12 uppercase">Trợ Thủ Đường Đua.</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {items.map((gear, idx) => (
+                            <div key={idx} className="glass-ui-panel rounded-3xl p-8 flex flex-col justify-between min-h-[220px]">
+                                <div>
+                                    <span className="text-[9px] font-mono uppercase tracking-widest text-white/40">{gear.tags}</span>
+                                    <h3 className="font-heading italic text-3xl text-white uppercase tracking-wide mt-1 mb-3">{gear.title}</h3>
+                                    <p className="text-xs text-white/50 font-light leading-relaxed font-body">{gear.desc}</p>
                                 </div>
-                            ))}
-                        </div>
+                            </div>
+                        ))}
                     </div>
                 </section>
             );
         };
 
-        // BỘ CÔNG CỤ TÍNH PACE CHẠY BỘ THỰC TẾ (PACE CALCULATOR ENGINE)
-        const SectionPaceCalculator = () => {
-            const [distance, setDistance] = useState(5); // km
-            const [timeMin, setTimeMin] = useState(30); // phút
-            const [calculatedPace, setCalculatedPace] = useState('6:00');
+        // 4. PACE CALCULATOR UTILITY
+        const PaceCalculatorSection = () => {
+            const [km, setKm] = useState(5);
+            const [min, setMin] = useState(30);
+            const [pace, setPace] = useState('6:00');
 
             useEffect(() => {
-                if(distance > 0 && timeMin > 0) {
-                    const totalSeconds = (timeMin * 60) / distance;
-                    const mins = Math.floor(totalSeconds / 60);
-                    const secs = Math.round(totalSeconds % 60);
-                    const formattedSecs = secs < 10 ? `0${secs}` : secs;
-                    setCalculatedPace(`${mins}:${formattedSecs}`);
+                if(km > 0 && min > 0) {
+                    const totalSec = (min * 60) / km;
+                    const pMin = Math.floor(totalSec / 60);
+                    const pSec = Math.round(totalSec % 60);
+                    setPace(`${pMin}:${pSec < 10 ? '0' + pSec : pSec}`);
                 }
-            }, [distance, timeMin]);
+            }, [km, min]);
 
             return (
-                <section className="relative w-full py-24 px-6 md:px-16 border-t border-white/5 z-10">
-                    <div className="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                <section className="relative w-full py-20 px-6 max-w-6xl mx-auto">
+                    <div className="glass-ui-panel rounded-3xl p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                         <div className="lg:col-span-5">
-                            <span className="text-[10px] font-bold tracking-widest uppercase text-white/40 block mb-2">// TIỆN ÍCH CHO VẬN ĐỘNG VIÊN</span>
-                            <h2 className="font-heading italic text-4xl md:text-6xl text-white tracking-tight uppercase leading-none mb-4">Máy Tính Tốc Độ<br/>Pace Thiết Yếu.</h2>
-                            <p className="text-xs text-white/40 font-light leading-relaxed font-body">Nhập quãng đường mong muốn và tổng thời gian mục tiêu để hệ thống tự động tính toán chỉ số Pace (số phút/km) chuẩn xác nhất cho kế hoạch tập luyện của bạn.</p>
+                            <span className="text-[10px] font-bold tracking-widest uppercase text-orange-500 block mb-1">// TIỆN ÍCH CHO VẬN ĐỘNG VIÊN</span>
+                            <h2 className="font-heading italic text-4xl text-white tracking-tight uppercase mb-2">Tính Toán Tốc Độ Chạy (Pace)</h2>
+                            <p className="text-xs text-white/40 font-light font-body">Xác định tốc độ mục tiêu chuẩn xác cho từng bài chạy biến tốc hoặc chạy bền tích lũy.</p>
                         </div>
-                        <div className="lg:col-span-7 glass-runner-ui rounded-3xl p-8 bg-zinc-950/40 grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
+                        <div className="lg:col-span-7 grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
                             <div>
-                                <label className="text-[9px] uppercase tracking-widest text-white/50 block mb-2 font-bold font-body">Quãng Đường (KM)</label>
-                                <input type="number" value={distance} onChange={e => setDistance(parseFloat(e.target.value) || 0)} className="w-full p-3 rounded-xl input-runner-cms text-sm font-bold text-orange-500 font-mono" />
+                                <label className="text-[9px] uppercase tracking-widest text-white/50 block mb-1.5 font-bold font-body">Cự Ly Chạy (KM)</label>
+                                <input type="number" value={km} onChange={e => setKm(parseFloat(e.target.value) || 0)} className="w-full p-3 rounded-xl input-dark-field text-sm font-bold font-mono text-orange-500" />
                             </div>
                             <div>
-                                <label className="text-[9px] uppercase tracking-widest text-white/50 block mb-2 font-bold font-body">Tổng Thời Gian (Phút)</label>
-                                <input type="number" value={timeMin} onChange={e => setTimeMin(parseInt(e.target.value) || 0)} className="w-full p-3 rounded-xl input-runner-cms text-sm font-bold text-orange-500 font-mono" />
+                                <label className="text-[9px] uppercase tracking-widest text-white/50 block mb-1.5 font-bold font-body">Thời Gian (Phút)</label>
+                                <input type="number" value={min} onChange={e => setMin(parseInt(e.target.value) || 0)} className="w-full p-3 rounded-xl input-dark-field text-sm font-bold font-mono text-orange-500" />
                             </div>
                             <div className="p-3 bg-orange-500/10 border border-orange-500/20 rounded-xl text-center md:text-left">
-                                <div className="text-[9px] uppercase tracking-widest text-orange-400 font-bold font-body">Tốc độ Pace Yêu Cầu</div>
-                                <div className="text-3xl font-heading italic font-bold text-white mt-1">{calculatedPace} <span className="text-[11px] font-body text-white/40 tracking-normal font-normal">/km</span></div>
+                                <div className="text-[9px] uppercase tracking-widest text-orange-400 font-bold font-body">Pace Trung Bình</div>
+                                <div className="text-3xl font-heading italic font-bold text-white mt-0.5">{pace} <span className="text-[10px] font-body text-white/40 font-normal">/km</span></div>
                             </div>
                         </div>
                     </div>
@@ -312,179 +276,139 @@
             );
         };
 
-        // HỆ THỐNG TRẠM CMS QUẢN TRỊ NỘI DUNG HIỂN THỊ TRỰC QUAN TRÊN PHẦN NỀN
-        const SectionManagementCMS = () => {
-            const { runningArticles, setRunningArticles, logoUrl, setLogoUrl } = useContext(AppContext);
+        // 5. CMS MANAGEMENT HUB & KNOWLEDGE LIST
+        const CMSManagementSection = () => {
+            const { blogPosts, setBlogPosts, logoUrl, setLogoUrl } = useContext(AppContext);
             const [title, setTitle] = useState('');
             const [desc, setDesc] = useState('');
-            const [content, setContent] = useState('');
-            const [inputLogo, setInputLogo] = useState(logoUrl);
+            const [txtLogo, setTxtLogo] = useState(logoUrl);
 
-            const handlePublishPost = (e) => {
+            const handlePublish = (e) => {
                 e.preventDefault();
-                if(!title || !content) {
-                    alert('Vui lòng nhập đầy đủ Tiêu đề và Nội dung giáo án chạy bộ!');
-                    return;
-                }
-                const formattedContent = `<p style="font-size:15px; color:rgba(255,255,255,0.8); font-weight:300; line-height:1.7;">${content}</p>`;
-                const newArticle = {
+                if(!title || !desc) return alert('Vui lòng điền đủ Tiêu đề và Mô tả giáo án!');
+                
+                const newPost = {
                     title: title,
-                    desc: desc || 'Cập nhật kiến thức chạy bộ chuẩn hóa.',
-                    content: formattedContent,
+                    desc: desc,
                     date: new Date().toLocaleDateString('vi-VN')
                 };
-                const updatedList = [newArticle, ...runningArticles];
-                setRunningArticles(updatedList);
-                localStorage.setItem('yeuchaybo_articles_v5', JSON.stringify(updatedList));
-                setTitle(''); setDesc(''); setContent('');
-                alert('Đã đồng bộ hóa dữ liệu lên máy chủ phân phối Vercel thành công!');
-            };
-
-            const handleUpdateLogo = (e) => {
-                e.preventDefault();
-                setLogoUrl(inputLogo);
-                alert('Cập nhật Logo nhận diện cộng đồng thành công!');
+                const nextList = [newPost, ...blogPosts];
+                setBlogPosts(nextList);
+                localStorage.setItem('yeuchaybo_data_v6', JSON.stringify(nextList));
+                setTitle(''); setDesc('');
             };
 
             return (
-                <section className="relative w-full py-24 px-6 md:px-16 border-t border-white/5 z-10 bg-gradient-to-b from-transparent to-zinc-950/50">
-                    <div className="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+                <section className="relative w-full py-20 px-6 max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+                    
+                    {/* KHỐI ĐIỀU KHIỂN CMS CHỦ ĐỘNG */}
+                    <div className="lg:col-span-5 glass-ui-panel rounded-2xl p-6 bg-zinc-950/80 lg:sticky lg:top-28">
+                        <div className="border-b border-white/5 pb-3 mb-5">
+                            <h3 className="text-xs font-bold uppercase tracking-widest text-orange-500 font-body">TRẠM ĐIỀU HÀNH THÔNG TIN</h3>
+                            <p className="text-[10px] text-white/40 mt-0.5">Xuất bản tài liệu cẩm nang chạy bộ ngay lập tức</p>
+                        </div>
                         
-                        {/* CONTROL CONSOLE PANEL QUẢN TRỊ ĐỒNG BỘ */}
-                        <div className="lg:col-span-5 glass-runner-ui rounded-3xl p-6 bg-zinc-950/80 sticky top-28">
-                            <div className="border-b border-white/10 pb-3 mb-5">
-                                <h3 className="text-xs font-bold uppercase tracking-widest text-orange-500 flex items-center gap-2 font-body">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-ping" /> TRẠM ĐIỀU HÀNH THÔNG TIN V5
-                                </h3>
-                                <p className="text-[10px] text-white/40 mt-1 font-body">Tùy biến thương hiệu và xuất bản cẩm nang chạy bộ trực tiếp</p>
+                        <div className="mb-5 pb-5 border-b border-white/5 flex flex-col gap-1.5">
+                            <label className="text-[9px] uppercase tracking-widest text-white/40 block font-bold font-body">Đổi URL Logo Đại Diện</label>
+                            <div className="flex gap-2">
+                                <input type="text" value={txtLogo} onChange={e => setTxtLogo(e.target.value)} className="flex-1 p-2.5 rounded-xl input-dark-field text-xs font-mono" />
+                                <button onClick={() => { setLogoUrl(txtLogo); alert('Cập nhật Logo thành công!') }} className="px-4 py-2 rounded-xl bg-white text-black font-bold text-[9px] uppercase tracking-widest hover:bg-orange-500 hover:text-white transition-colors">LƯU</button>
                             </div>
-
-                            {/* Form Đổi Ảnh Logo Toàn Cục */}
-                            <form onSubmit={handleUpdateLogo} className="mb-5 pb-5 border-b border-white/5 flex flex-col gap-2">
-                                <label className="text-[9px] uppercase tracking-widest text-white/40 block font-bold font-body">URL Ảnh Logo Thương Hiệu</label>
-                                <div className="flex gap-2">
-                                    <input type="text" value={inputLogo} onChange={e => setInputLogo(e.target.value)} className="flex-1 p-2.5 rounded-xl input-runner-cms text-xs font-mono" />
-                                    <button type="submit" className="px-4 py-2.5 rounded-xl bg-white text-black font-bold text-[9px] uppercase tracking-widest hover:bg-orange-500 hover:text-white transition-colors">Đổi</button>
-                                </div>
-                            </form>
-
-                            {/* Form Soạn Thảo Giáo Án */}
-                            <form onSubmit={handlePublishPost} className="flex flex-col gap-4">
-                                <div>
-                                    <label className="text-[9px] uppercase tracking-widest text-white/40 block mb-1.5 font-bold font-body">Tiêu Đề Giáo Án / Bài Viết</label>
-                                    <input type="text" placeholder="Ví dụ: Phương pháp tích lũy Base Mileage..." value={title} onChange={e => setTitle(e.target.value)} className="w-full p-3 rounded-xl input-runner-cms text-xs font-medium uppercase tracking-wide" />
-                                </div>
-                                <div>
-                                    <label className="text-[9px] uppercase tracking-widest text-white/40 block mb-1.5 font-bold font-body">Mô tả Tóm Tắt (Meta Description)</label>
-                                    <input type="text" placeholder="Hiển thị xem trước bài viết..." value={desc} onChange={e => setDesc(e.target.value)} className="w-full p-3 rounded-xl input-runner-cms text-xs" />
-                                </div>
-                                <div>
-                                    <label className="text-[9px] uppercase tracking-widest text-white/40 block mb-1.5 font-bold font-body">Nội dung cẩm nang chi tiết</label>
-                                    <textarea rows="4" placeholder="Nhập nội dung chia sẻ cho cộng đồng Runner..." value={content} onChange={e => setContent(e.target.value)} className="w-full p-3 rounded-xl input-runner-cms text-xs leading-relaxed"></textarea>
-                                </div>
-                                <button type="submit" className="w-full py-3.5 bg-orange-500 text-white font-bold text-[10px] tracking-widest uppercase rounded-xl hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/10 flex items-center justify-center gap-1">
-                                    ĐỒNG BỘ VÀ ĐĂNG BÀI VIẾT
-                                </button>
-                            </form>
                         </div>
 
-                        {/* LIVE FEED BÀI VIẾT CHỮ Chuẩn SEO */}
-                        <div className="lg:col-span-7 flex flex-col gap-6 w-full">
-                            <span className="text-[10px] font-bold tracking-widest uppercase text-white/40 block border-b border-white/5 pb-2 font-body">// THƯ VIỆN KIẾN THỨC YÊU CHẠY BỘ</span>
-                            {runningArticles.map((item, index) => (
-                                <div key={index} className="glass-runner-ui rounded-2xl p-6">
-                                    <div className="flex justify-between items-center mb-3">
-                                        <span className="text-[9px] font-mono text-orange-400 bg-orange-500/5 border border-orange-500/10 px-2.5 py-0.5 rounded">{item.date}</span>
-                                        <span className="text-[9px] text-white/30 tracking-widest uppercase font-bold font-body">Verified Guide</span>
-                                    </div>
-                                    <h4 className="font-heading italic text-3xl text-white uppercase tracking-wide mb-2">{item.title}</h4>
-                                    <p className="text-xs text-white/40 font-light leading-relaxed mb-4 border-l border-white/20 pl-3 italic font-body">{item.desc}</p>
-                                    <div className="border-t border-white/5 pt-3" dangerouslySetInnerHTML={{ __html: item.content }}></div>
+                        <form onSubmit={handlePublish} className="flex flex-col gap-4">
+                            <div>
+                                <label className="text-[9px] uppercase tracking-widest text-white/40 block mb-1 font-bold font-body">Tiêu Đề Giáo Án Chạy</label>
+                                <input type="text" placeholder="Ví dụ: Kỹ thuật chạy MAF giữ nhịp tim thấp..." value={title} onChange={e => setTitle(e.target.value)} className="w-full p-3 rounded-xl input-dark-field text-xs font-medium" />
+                            </div>
+                            <div>
+                                <label className="text-[9px] uppercase tracking-widest text-white/40 block mb-1 font-bold font-body">Nội Dung / Hướng Dẫn Tóm Tắt</label>
+                                <textarea rows="3" placeholder="Nhập giáo trình huấn luyện chi tiết cho cộng đồng..." value={desc} onChange={e => setDesc(e.target.value)} className="w-full p-3 rounded-xl input-dark-field text-xs leading-relaxed"></textarea>
+                            </div>
+                            <button type="submit" className="w-full py-3 bg-orange-500 text-white font-bold text-[10px] tracking-widest uppercase rounded-xl hover:bg-orange-600 transition-colors">
+                                CẬP NHẬT LÊN WEB FEED
+                              </button>
+                        </form>
+                    </div>
+
+                    {/* KHỐI FEED HIỂN THỊ BÀI VIẾT CHỮ */}
+                    <div className="lg:col-span-7 flex flex-col gap-5 w-full">
+                        <span className="text-[10px] font-bold tracking-widest uppercase text-white/30 block border-b border-white/5 pb-2 font-body">// CẨM NANG HUẤN LUYỆN CHUYÊN BIỆT</span>
+                        {blogPosts.map((post, i) => (
+                            <div key={i} className="glass-ui-panel rounded-xl p-6">
+                                <div className="flex justify-between items-center mb-3">
+                                    <span className="text-[9px] font-mono text-orange-400 bg-orange-500/5 border border-orange-500/10 px-2 py-0.5 rounded">{post.date}</span>
+                                    <span className="text-[9px] text-white/30 tracking-widest uppercase font-bold font-body">Verified Guide</span>
                                 </div>
-                            ))}
-                        </div>
+                                <h4 className="font-heading italic text-2xl text-white uppercase tracking-wide mb-2">{post.title}</h4>
+                                <p className="text-xs text-white/60 font-light leading-relaxed font-body">{post.desc}</p>
+                            </div>
+                        ))}
                     </div>
                 </section>
             );
         };
 
-        // THANH CHÂN TRANG FOOTER CHUẨN ĐA CỘT
-        const SectionAthleticsFooter = () => {
+        // 6. CHÂN TRANG FOOTER CHUẨN MỰC
+        const FooterSection = () => {
             return (
-                <footer className="relative w-full pt-24 pb-12 px-6 md:px-16 border-t border-white/5 bg-zinc-950/70 z-10 font-body">
-                    <div className="max-w-6xl mx-auto w-full grid grid-cols-1 md:grid-cols-12 gap-10 mb-16">
-                        <div className="md:col-span-5">
-                            <div className="font-heading text-3xl italic tracking-tight font-black text-white mb-4 uppercase">YÊU CHẠY BỘ<span className="text-orange-500">.NET</span></div>
-                            <p className="text-xs text-white/40 font-light leading-relaxed max-w-sm">Nền tảng tri thức thể thao, kết nối Strava và theo dõi chỉ số khoa học chạy bộ hàng đầu dành cho các câu lạc bộ phong trào khắp Việt Nam.</p>
+                <footer className="relative w-full pt-16 pb-8 px-6 border-t border-white/5 bg-zinc-950/60 mt-12">
+                    <div className="max-w-6xl mx-auto w-full flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
+                        <div>
+                            <div className="font-heading text-2xl italic tracking-tight font-black text-white uppercase">YÊU CHẠY BỘ<span className="text-orange-500">.NET</span></div>
+                            <p className="text-[11px] text-white/40 font-light mt-1 max-w-sm font-body">Cộng đồng kết nối khoa học sải chân, giáo án và chia sẻ niềm đam mê marathon bất tận.</p>
                         </div>
-                        <div className="md:col-span-4 grid grid-cols-2 gap-4">
-                            <div>
-                                <h5 className="text-[10px] font-bold uppercase tracking-widest text-white/50 mb-3">Thông Tin</h5>
-                                <p className="text-xs text-white/40 font-light leading-relaxed">Pulse Running Lab,<br/>Thành phố Hồ Chí Minh,<br/>Việt Nam.</p>
-                            </div>
-                            <div>
-                                <h5 className="text-[10px] font-bold uppercase tracking-widest text-white/50 mb-3">Hỗ Trợ</h5>
-                                <p className="text-xs text-white/40 font-light">Hotline: 1900 88 PULSE<br/>Mail: admin@yeuchaybo.net</p>
-                            </div>
+                        <div className="text-[9px] font-medium tracking-widest text-white/30 font-body">
+                            © 2026 YEUCHAYBO.NET. KIẾN TẠO THỂ THAO VIỆT NAM CHUYÊN NGHIỆP.
                         </div>
-                        <div className="md:col-span-3 flex flex-col md:items-end">
-                            <div className="w-full max-w-[260px] glass-runner-ui rounded-2xl p-4 bg-black/30">
-                                <span className="text-[10px] font-bold text-orange-500 uppercase block mb-1">Cộng Đồng Runner</span>
-                                <div className="text-[11px] font-light text-white/50 mb-3">Đồng hành cùng 150.000+ thành viên trên Facebook.</div>
-                                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="w-full py-2 bg-white/5 border border-white/10 text-center block text-[9px] font-bold tracking-widest text-white rounded-lg hover:bg-orange-500 hover:border-orange-500 transition-colors uppercase">Tham Gia Group</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="max-w-6xl mx-auto w-full border-t border-white/5 pt-6 text-center md:text-left text-[9px] font-medium tracking-widest text-white/30 select-none">
-                        © 2026 YEUCHAYBO.NET. PHÁT TRIỂN VÌ SỨC KHỎE CỘNG ĐỒNG RUNNER VIỆT NAM.
                     </div>
                 </footer>
             );
         };
 
         // ĐIỀU PHỐI LOGIC TOÀN CỤC CỦA HỆ THỐNG
-        const MainAthleticsApp = () => {
-            const [appState, setAppState] = useState({ currentSection: 0 });
+        const MainApp = () => {
             const [logoUrl, setLogoUrl] = useState('https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&w=150&q=80');
-            
-            const [runningArticles, setRunningArticles] = useState(() => {
-                const data = localStorage.getItem('yeuchaybo_articles_v5');
-                return data ? JSON.parse(data) : [
-                    { title: 'Giáo án chạy bộ 21K (Half Marathon) dưới 2 giờ', desc: 'Bí quyết phân phối thể lực và tốc độ Pace tối ưu cho mục tiêu Sub 2 đỉnh cao.', content: 'Để hoàn thành 21.097km dưới 2 tiếng, bạn cần duy trì tốc độ Pace trung bình ổn định ở mức 5:40 phút/km. Hãy bắt đầu 3km đầu tiên ở mức Pace 5:50 để làm nóng cơ bắp, tích lũy năng lượng, sau đó siết đều guồng chân ở vùng nhịp tim Zone 3...', date: '31/05/2026' }
+            const [blogPosts, setBlogPosts] = useState(() => {
+                const save = localStorage.getItem('yeuchaybo_data_v6');
+                return save ? JSON.parse(save) : [
+                    { title: 'Kế hoạch tích lũy nền tảng (Base Mileage) hiệu quả', desc: 'Phương pháp tập luyện vùng nhịp tim Zone 2 tối thiểu 4-6 tuần giúp phát triển mao mạch và tăng sức bền cơ tim bền bỉ trước khi bước vào giai đoạn siết tốc độ.', date: '31/05/2026' }
                 ];
             });
 
-            const telemetryStats = [
-                { metrics: 'Guồng Chân Tối Ưu', value: '180', unit: 'SPM' },
-                { metrics: 'Thời Gian Tiếp Đất', value: '205', unit: 'ms' },
-                { metrics: 'Độ Nảy Chiều Đứng', value: '6.2', unit: 'cm' },
-                { metrics: 'Thành Viên Đang Chạy', value: '4,820', unit: 'Live' }
+            const metricsData = [
+                { title: 'Guồng Chân Chuẩn', value: '180', unit: 'SPM' },
+                { title: 'Thời Gian Tiếp Đất', value: '210', unit: 'ms' },
+                { title: 'Độ Nảy Chiều Đứng', value: '6.5', unit: 'cm' },
+                { title: 'Runner Đang Live', value: '5,240', unit: 'VĐV' }
             ];
 
             const sectionRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
 
-            const changeSection = (index) => {
-                setAppState({ currentSection: index });
-                if(sectionRefs[index] && sectionRefs[index].current) {
-                    sectionRefs[index].current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            const scrollToSection = (idx) => {
+                if(sectionRefs[idx] && sectionRefs[idx].current) {
+                    sectionRefs[idx].current.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             };
 
             return (
-                <AppContext.Provider value={{ appState, changeSection, logoUrl, setLogoUrl, runningArticles, setRunningArticles, telemetryStats }}>
-                    <main className="relative w-full overflow-hidden">
-                        <NavigationBarRunner />
-                        <div ref={sectionRefs[0]}><SectionAthleticsHero /></div>
-                        <div ref={sectionRefs[1]}><SectionShoeCollection /></div>
-                        <div ref={sectionRefs[2]}><SectionPaceCalculator /><SectionManagementCMS /></div>
-                        <div ref={sectionRefs[3]}><SectionAthleticsFooter /></div>
-                    </main>
+                <AppContext.Provider value={{ logoUrl, setLogoUrl, blogPosts, setBlogPosts, metricsData, scrollToSection, sectionRefs }}>
+                    <div className="w-full flex flex-col min-h-screen">
+                        <FloatingNavbar />
+                        <div ref={sectionRefs[0]}><HeroSection /></div>
+                        <div ref={sectionRefs[1]}><GearSection /></div>
+                        <div ref={sectionRefs[2]}><PaceCalculatorSection /></div>
+                        <div ref={sectionRefs[3]}><CMSManagementSection /></div>
+                        <FooterSection />
+                    </div>
                 </AppContext.Provider>
             );
         };
 
-        const rootNode = ReactDOM.createRoot(document.getElementById('root'));
-        rootNode.render(<MainAthleticsApp />);
+        // Khởi tạo root chuẩn của React 18 không sợ CORS hay lỗi biên dịch
+        const container = document.getElementById('root');
+        const root = ReactDOM.createRoot(container);
+        root.render(<MainApp />);
     </script>
 </body>
 </html>
