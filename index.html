@@ -607,3 +607,62 @@
     socialBenefits();
 </script>
 <!-- PART 2 END -->
+<!-- PART 2.1 START -->
+<div id="heroNike3D">
+    <h2 style="text-align:center; font-family:sans-serif; font-weight:900; font-size:48px; color:#00ffcc;">
+        CHẠY BỘ TƯƠNG LAI
+    </h2>
+    <div id="nikeCanvasContainer" style="width:100%; height:600px;"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@pmndrs/three-stdlib@2.21.6/loaders/GLTFLoader.min.js"></script>
+<script>
+    console.log(">>> Part 2.1 Hero Section 3D Nike đã append thành công <<<");
+
+    // Khởi tạo scene
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+    renderer.setSize(window.innerWidth, 600);
+    document.getElementById("nikeCanvasContainer").appendChild(renderer.domElement);
+
+    // Ánh sáng
+    const light = new THREE.PointLight(0xffffff, 1);
+    light.position.set(10,10,10);
+    scene.add(light);
+    scene.add(new THREE.AmbientLight(0x404040));
+
+    // Load mô hình giày Nike 3D (GLTF)
+    const loader = new THREE.GLTFLoader();
+    loader.load("https://models.babylonjs.com/NikeShoe/NikeShoe.gltf", function(gltf){
+        const shoe = gltf.scene;
+        shoe.scale.set(2,2,2);
+        shoe.position.y = -1;
+        scene.add(shoe);
+
+        // Tương tác chuột xoay giày
+        let isDragging=false, prevX=0, prevY=0;
+        renderer.domElement.addEventListener("mousedown", e=>{isDragging=true; prevX=e.clientX; prevY=e.clientY;});
+        renderer.domElement.addEventListener("mouseup", ()=>{isDragging=false;});
+        renderer.domElement.addEventListener("mousemove", e=>{
+            if(isDragging){
+                let dx=e.clientX-prevX, dy=e.clientY-prevY;
+                shoe.rotation.y += dx*0.01;
+                shoe.rotation.x += dy*0.01;
+                prevX=e.clientX; prevY=e.clientY;
+            }
+        });
+
+        // Animation loop
+        function animate(){
+            requestAnimationFrame(animate);
+            shoe.rotation.y += 0.002; // xoay nhẹ liên tục
+            renderer.render(scene,camera);
+        }
+        animate();
+    });
+
+    camera.position.z = 5;
+</script>
+<!-- PART 2.1 END -->
