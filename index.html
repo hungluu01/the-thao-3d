@@ -666,3 +666,63 @@
     camera.position.z = 5;
 </script>
 <!-- PART 2.1 END -->
+<!-- PART 2.2 START -->
+<div id="miniPart2_2" style="text-align:center; margin-top:50px;">
+    <h2 style="color:#00ffcc; font-weight:900;">Lợi ích sức khỏe</h2>
+    <canvas id="healthChart" width="600" height="400"></canvas>
+    <button id="badgeBtn" style="margin-top:20px; padding:10px 20px; font-size:18px; background:#111; color:#00ffcc; border:2px solid #00ffcc; border-radius:10px;">
+        Nhận Huy Hiệu Thể Thao
+    </button>
+    <div id="badgeArea" style="margin-top:30px; height:100px;"></div>
+</div>
+
+<script>
+    console.log(">>> Part 2.2 Lợi ích sức khỏe đã append thành công <<<");
+
+    // Neon Chart
+    const canvas = document.getElementById("healthChart");
+    const ctx = canvas.getContext("2d");
+    const data = [5, 10, 7]; // km chạy, tốc độ, thành tích
+    const labels = ["Km", "Tốc độ", "Thành tích"];
+    function drawChart(){
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        data.forEach((val,i)=>{
+            ctx.fillStyle = "rgba(0,255,204,0.8)";
+            ctx.shadowColor = "#00ffcc";
+            ctx.shadowBlur = 20;
+            ctx.fillRect(100+i*150, 400-val*30, 80, val*30);
+            ctx.fillStyle="#fff";
+            ctx.fillText(labels[i], 120+i*150, 390);
+        });
+    }
+    drawChart();
+
+    // Hover effect: neon pulse
+    canvas.addEventListener("mousemove",()=>{
+        ctx.shadowBlur = 40;
+        drawChart();
+        setTimeout(()=>{ctx.shadowBlur=20; drawChart();},200);
+    });
+
+    // Badge effect
+    document.getElementById("badgeBtn").addEventListener("click",()=>{
+        const badge=document.createElement("div");
+        badge.innerHTML="🏅";
+        badge.style.position="absolute";
+        badge.style.fontSize="40px";
+        badge.style.left="50%";
+        badge.style.top="50%";
+        badge.style.transition="all 1s cubic-bezier(.17,.67,.83,.67)";
+        document.body.appendChild(badge);
+        setTimeout(()=>{
+            badge.style.left="80%";
+            badge.style.top="20px";
+        },100);
+        setTimeout(()=>{
+            document.getElementById("badgeArea").appendChild(badge);
+            badge.style.position="static";
+            badge.style.transition="none";
+        },1200);
+    });
+</script>
+<!-- PART 2.2 END -->
