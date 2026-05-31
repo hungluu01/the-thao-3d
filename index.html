@@ -8,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone@7.23.12/babel.min.js" crossorigin></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2 family=Barlow:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -140,7 +141,7 @@
 
     <div id="root"></div>
 
-    <script>
+    <script type="text/babel">
         const { useState, useEffect, useRef, createContext, useContext } = React;
         const AppContext = createContext();
 
@@ -207,23 +208,27 @@
                 { title: 'Cấu Trúc Sợi Carbon Adaptive', desc: 'Bứt phá giới hạn vật liệu với đĩa đệm carbon thích ứng, tăng tốc độ phản hồi lực thêm 15%.' },
                 { title: 'Hệ Sinh Thái Kết Nối Vô Hạn', desc: 'Mạng lưới đồng bộ hóa dữ liệu tập luyện của hàng triệu vận động viên trên toàn cầu xuyên không gian.' }
             ];
-            return React.createElement('section', { className: 'relative w-full py-32 px-6 md:px-16 border-t border-white/5 bg-zinc-950/20 z-10' },
-                React.createElement('div', { className: 'max-w-6xl mx-auto w-full' },
-                    React.createElement('span', { className: 'text-[10px] font-bold tracking-widest uppercase text-white/40 block mb-4' }, '// TỔNG QUAN & ĐỊNH HƯỚNG TƯƠNG LAI'),
-                    React.createElement('div', { className: 'grid grid-cols-1 lg:grid-cols-12 gap-12 items-start mb-24' },
-                        React.createElement('h2', { className: 'font-heading italic text-5xl md:text-7xl text-white leading-none tracking-tight lg:col-span-7 uppercase select-none' }, 'Định Hướng Chiến Lược\n& Giá Trị Cốt Lõi.'),
-                        React.createElement('p', { className: 'text-xs md:text-sm text-white/50 font-light leading-relaxed lg:col-span-5 pt-2' }, 'Chúng tôi không xây dựng một trang web thông thường. PULSE.RUN là trạm lưu trữ tri thức và giải pháp thiết bị thể thao tương lai, nơi mỗi thông số sải chân đều được cơ khí hóa để bảo vệ và bứt phá giới hạn thể lực của bạn.')
-                    ),
-                    React.createElement('div', { className: 'grid grid-cols-1 md:grid-cols-3 gap-8 w-full' },
-                        strategicCores.map(c => React.createElement('div', { key: c.title, className: 'liquid-card rounded-2xl p-8 min-h-[260px] flex flex-col justify-between' },
-                            React.createElement('div', { className: 'w-6 h-6 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-[10px] font-bold text-orange-400' }, '•'),
-                            React.createElement('div', null,
-                                React.createElement('h3', { className: 'font-heading italic text-3xl text-white tracking-wide mb-3 uppercase' }, c.title),
-                                React.createElement('p', { className: 'text-xs text-white/50 font-light leading-relaxed' }, c.desc)
-                            )
-                        ))
-                    )
-                )
+            return (
+                <section className="relative w-full py-32 px-6 md:px-16 border-t border-white/5 bg-zinc-950/20 z-10">
+                    <div className="max-w-6xl mx-auto w-full">
+                        <span className="text-[10px] font-bold tracking-widest uppercase text-white/40 block mb-4">// TỔNG QUAN & ĐỊNH HƯỚNG TƯƠNG LAI</span>
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start mb-24">
+                            <h2 className="font-heading italic text-5xl md:text-7xl text-white leading-none tracking-tight lg:col-span-7 uppercase select-none">Định Hướng Chiến Lược<br/>& Giá Trị Cốt Lõi.</h2>
+                            <p className="text-xs md:text-sm text-white/50 font-light leading-relaxed lg:col-span-5 pt-2">Chúng tôi không xây dựng một trang web thông thường. PULSE.RUN là trạm lưu trữ tri thức và giải pháp thiết bị thể thao tương lai, nơi mỗi thông số sải chân đều được cơ khí hóa để bảo vệ và bứt phá giới hạn thể lực của bạn.</p>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
+                            {strategicCores.map(c => (
+                                <div key={c.title} className="liquid-card rounded-2xl p-8 min-h-[260px] flex flex-col justify-between">
+                                    <div className="w-6 h-6 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-[10px] font-bold text-orange-400">•</div>
+                                    <div>
+                                        <h3 className="font-heading italic text-3xl text-white tracking-wide mb-3 uppercase">{c.title}</h3>
+                                        <p className="text-xs text-white/50 font-light leading-relaxed">{c.desc}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
             );
         };
 
@@ -235,167 +240,201 @@
                 { name: 'Kinetic Trail-X', class: 'Chạy Địa Hình Kháng Nước', drop: '6mm', weight: '240g', upper: 'Vải Ripstop Matrix Chống Rách', plate: 'Khung Nhựa TPU Bảo Vệ Gót', foam: 'Đệm Kép Eva-Pro Hấp Thụ Lực' },
                 { name: 'Velo Sprint Carbon', class: 'Bứt Tốc Cự Ly Ngắn', drop: '0mm', weight: '140g', upper: 'Lưới Đơn Sợi Siêu Thoáng Khí', plate: 'Đĩa Carbon Toàn Chiều Dài', foam: 'Đệm Siêu Phản Hồi AeroJet' }
             ];
-            return React.createElement('div', { className: 'relative w-full py-24 border-t border-white/5 bg-black/40 z-10' },
-                React.createElement('div', { className: 'max-w-6xl mx-auto w-full px-6' },
-                    React.createElement('span', { className: 'text-[10px] font-bold tracking-widest uppercase text-white/40 block mb-4' }, '// TRIỂN LÃM SẢN PHẨM HIGH-END'),
-                    React.createElement('h2', { className: 'font-heading italic text-5xl md:text-7xl text-white leading-none tracking-tight mb-16 uppercase select-none' }, 'Thiết Bị Động Lực Học.'),
-                    React.createElement('div', { className: 'flex border-b border-white/10 mb-12 overflow-x-auto gap-8' },
-                        shoes.map((s, idx) => React.createElement('button', { key: s.name, onClick: () => setActiveTab(idx), className: 'pb-4 text-xs font-bold tracking-widest uppercase transition-all whitespace-nowrap ' + (activeTab === idx ? 'text-white border-b-2 border-white' : 'text-white/30 hover:text-white') }, s.name))
-                    ),
-                    React.createElement('div', { className: 'grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch' },
-                        React.createElement('div', { className: 'liquid-card rounded-3xl p-8 md:p-12 lg:col-span-7 flex flex-col justify-between' },
-                            React.createElement('div', null,
-                                React.createElement('span', { className: 'text-[10px] font-bold uppercase tracking-widest text-orange-400 font-body' }, shoes[activeTab].class),
-                                React.createElement('h3', { className: 'font-heading italic text-5xl md:text-6xl text-white tracking-tighter mt-3 mb-6 uppercase' }, shoes[activeTab].name),
-                                React.createElement('p', { className: 'text-xs md:text-sm text-white/50 font-light leading-relaxed max-w-xl' }, 'Dòng sản phẩm cao cấp đúc kết từ phòng thí nghiệm cơ sinh học, tối ưu hóa năng lượng phản hồi, hỗ trợ guồng chân sải rộng và triệt tiêu chấn thương gót chân tuyệt đối.')
-                            ),
-                            React.createElement('div', { className: 'grid grid-cols-2 gap-6 border-t border-white/10 pt-8 mt-12' },
-                                React.createElement('div', null, React.createElement('div', { className: 'text-[9px] uppercase tracking-widest text-white/40 font-bold' }, 'Độ Dốc Gót-Mũi (Drop)'), React.createElement('div', { className: 'text-2xl font-heading italic text-white mt-1' }, shoes[activeTab].drop)),
-                                React.createElement('div', null, React.createElement('div', { className: 'text-[9px] uppercase tracking-widest text-white/40 font-bold' }, 'Trọng Lượng Siêu Nhẹ'), React.createElement('div', { className: 'text-2xl font-heading italic text-white mt-1' }, shoes[activeTab].weight))
-                            )
-                        ),
-                        React.createElement('div', { className: 'liquid-card rounded-3xl p-8 lg:col-span-5 flex flex-col justify-between gap-4' },
-                            React.createElement('h4', { className: 'text-[10px] font-bold uppercase tracking-widest text-white/50 border-b border-white/5 pb-3' }, 'Thông Số Kỹ Thuật Vật Liệu'),
-                            [
-                                { label: 'Cấu Trúc Thân Trên (Upper)', val: shoes[activeTab].upper },
-                                { label: 'Hệ Thống Đĩa Đệm (Plate)', val: shoes[activeTab].plate },
-                                { label: 'Công Nghệ Bọt Đệm (Foam)', val: shoes[activeTab].foam }
-                            ].map((spec, sIdx) => React.createElement('div', { key: sIdx, className: 'border-b border-white/5 pb-2.5 last:border-0' },
-                                React.createElement('div', { className: 'text-[9px] text-white/30 uppercase tracking-wider' }, spec.label),
-                                React.createElement('div', { className: 'text-xs text-white/80 font-medium mt-1 font-body' }, spec.val)
-                            ))
-                        )
-                    )
-                )
+            return (
+                <div className="relative w-full py-24 border-t border-white/5 bg-black/40 z-10">
+                    <div className="max-w-6xl mx-auto w-full px-6">
+                        <span className="text-[10px] font-bold tracking-widest uppercase text-white/40 block mb-4">// TRIỂN LÃM SẢN PHẨM HIGH-END</span>
+                        <h2 className="font-heading italic text-5xl md:text-7xl text-white leading-none tracking-tight mb-16 uppercase select-none">Thiết Bị Động Lực Học.</h2>
+                        <div className="flex border-b border-white/10 mb-12 overflow-x-auto gap-8">
+                            {shoes.map((s, idx) => (
+                                <button key={s.name} onClick={() => setActiveTab(idx)} className={'pb-4 text-xs font-bold tracking-widest uppercase transition-all whitespace-nowrap ' + (activeTab === idx ? 'text-white border-b-2 border-white' : 'text-white/30 hover:text-white')}>{s.name}</button>
+                            ))}
+                        </div>
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+                            <div className="liquid-card rounded-3xl p-8 md:p-12 lg:col-span-7 flex flex-col justify-between">
+                                <div>
+                                    <span className="text-[10px] font-bold uppercase tracking-widest text-orange-400 font-body">{shoes[activeTab].class}</span>
+                                    <h3 className="font-heading italic text-5xl md:text-6xl text-white tracking-tighter mt-3 mb-6 uppercase">{shoes[activeTab].name}</h3>
+                                    <p className="text-xs md:text-sm text-white/50 font-light leading-relaxed max-w-xl">Dòng sản phẩm cao cấp đúc kết từ phòng thí nghiệm cơ sinh học, tối ưu hóa năng lượng phản hồi, hỗ trợ guồng chân sải rộng và triệt tiêu chấn thương gót chân tuyệt đối.</p>
+                                </div>
+                                <div className="grid grid-cols-2 gap-6 border-t border-white/10 pt-8 mt-12">
+                                    <div>
+                                        <div className="text-[9px] uppercase tracking-widest text-white/40 font-bold">Độ Dốc Gót-Mũi (Drop)</div>
+                                        <div className="text-2xl font-heading italic text-white mt-1">{shoes[activeTab].drop}</div>
+                                    </div>
+                                    <div>
+                                        <div className="text-[9px] uppercase tracking-widest text-white/40 font-bold">Trọng Lượng Siêu Nhẹ</div>
+                                        <div className="text-2xl font-heading italic text-white mt-1">{shoes[activeTab].weight}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="liquid-card rounded-3xl p-8 lg:col-span-5 flex flex-col justify-between gap-4">
+                                <h4 className="text-[10px] font-bold uppercase tracking-widest text-white/50 border-b border-white/5 pb-3">Thông Số Kỹ Thuật Vật Liệu</h4>
+                                {[
+                                    { label: 'Cấu Trúc Thân Trên (Upper)', val: shoes[activeTab].upper },
+                                    { label: 'Hệ Thống Đĩa Đệm (Plate)', val: shoes[activeTab].plate },
+                                    { label: 'Công Nghệ Bọt Đệm (Foam)', val: shoes[activeTab].foam }
+                                ].map((spec, sIdx) => (
+                                    <div key={sIdx} className="border-b border-white/5 pb-2.5 last:border-0">
+                                        <div className="text-[9px] text-white/30 uppercase tracking-wider">{spec.label}</div>
+                                        <div className="text-xs text-white/80 font-medium mt-1 font-body">{spec.val}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             );
         };
-        // PHÂN KHU CHỨC NĂNG 2: KIẾN THỨC / TRÌNH QUẢN TRỊ BÀI VIẾT CHUẨN SEO VÔ HẠN
+
+        // TRÌNH QUẢN TRỊ CMS BÀI VIẾT VÀ TÙY BIẾN LOGO SIÊU VIỆT (ADMIN SYSTEM CHỨA FROM KÍNH LỎNG CHÓA SÁNG)
         const ComponentKnowledgeCMS = () => {
-            const { showAdminPortal } = useContext(AppContext);
+            const { showAdminPortal, setLogoImage, logoImage } = useContext(AppContext);
             const [posts, setPosts] = useState(() => {
-                const saved = localStorage.getItem('pulse_run_posts_v2');
+                const saved = localStorage.getItem('pulse_run_posts_v3');
                 return saved ? JSON.parse(saved) : [
-                    { title: 'Tối ưu hóa góc đáp chân tránh chấn thương 2026', desc: 'Bí quyết căn chỉnh sải sải chân góc 45 độ chuẩn xác giúp tăng 15% hiệu suất phản hồi lực.', content: '<p style="text-align: left; font-size: 16px; color: #ffffff;">Đáp chân bằng nửa bàn chân trước giúp phân phối đều phản lực cơ học, giảm áp lực trực tiếp lên khớp gối gấp 3 lần so với đáp gót...</p>', date: '31/05/2026' }
+                    { title: 'Tối ưu hóa góc đáp chân tránh chấn thương 2026', desc: 'Bí quyết căn chỉnh sải chân góc 45 độ chuẩn xác giúp tăng 15% hiệu suất phản hồi lực.', content: '<p style="text-align: left; font-size: 16px; color: #ffffff;">Đáp chân bằng nửa bàn chân trước giúp phân phối đều phản lực cơ học, giảm áp lực trực tiếp lên khớp gối gấp 3 lần so với đáp gót...</p>', date: '31/05/2026' }
                 ];
             });
 
-            // State điều khiển trình soạn thảo
             const [editTitle, setEditTitle] = useState('');
             const [editDesc, setEditDesc] = useState('');
             const [editContent, setEditContent] = useState('');
+            const [inputLogo, setInputLogo] = useState(logoImage);
             const [textFormat, setTextFormat] = useState({ bold: false, italic: false, align: 'left', size: '16px', color: '#ffffff' });
 
             const handlePublishSEO = (e) => {
                 e.preventDefault();
                 if (!editTitle || !editContent) return;
 
-                // Xây dựng chuỗi HTML động lưu font và định dạng màu chữ chuẩn SEO
                 const processedHTML = `<p style="text-align: ${textFormat.align}; font-size: ${textFormat.size}; color: ${textFormat.color}; font-weight: ${textFormat.bold ? 'bold' : 'normal'}; font-style: ${textFormat.italic ? 'italic' : 'normal'};">${editContent}</p>`;
                 const newArticle = { title: editTitle, desc: editDesc, content: processedHTML, date: new Date().toLocaleDateString('vi-VN') };
 
                 const updatedList = [newArticle, ...posts];
                 setPosts(updatedList);
-                localStorage.setItem('pulse_run_posts_v2', JSON.stringify(updatedList));
+                localStorage.setItem('pulse_run_posts_v3', JSON.stringify(updatedList));
                 setEditTitle(''); setEditDesc(''); setEditContent('');
-                alert('Đã đồng bộ hóa và xuất bản bài viết chuẩn SEO lên hệ thống tĩnh thành công!');
+                alert('Đã đồng bộ hóa và xuất bản bài viết chuẩn SEO lên trang chủ tĩnh thành công!');
             };
 
-            return React.createElement('section', { className: 'relative w-full py-32 px-6 md:px-16 border-t border-white/5 z-10' },
-                React.createElement('div', { className: 'max-w-6xl mx-auto w-full' },
-                    React.createElement('span', { className: 'text-[10px] font-bold tracking-widest uppercase text-white/40 block mb-4' }, '// TRẠM ĐIỀU HÀNH TRI THỨC VÀ ĐÀO TẠO'),
-                    React.createElement('h2', { className: 'font-heading italic text-5xl md:text-7xl text-white leading-none tracking-tight mb-16 uppercase select-none' }, 'Kiến Thức & Chỉ Huy.'),
-                    
-                    // GIAO DIỆN TRANG QUẢN TRỊ BÀI VIẾT CAO CẤP (BẬT TẮT KHI BẤM LOGO)
-                    showAdminPortal && React.createElement('div', { className: 'liquid-card rounded-3xl p-6 md:p-10 border-orange-500/30 mb-16 bg-zinc-950/90 shadow-2xl animate-fadeIn' },
-                        React.createElement('div', { className: 'flex items-center justify-between border-b border-white/10 pb-4 mb-6' },
-                            React.createElement('h3', { className: 'text-xs font-bold uppercase tracking-widest text-orange-400' }, 'Trình Quản Trị Hệ Thống Content CMS (Chuẩn SEO Thao Tác Đơn Giản)'),
-                            React.createElement('span', { className: 'text-[9px] bg-orange-500/10 border border-orange-500/30 text-orange-400 px-2 py-0.5 rounded-full uppercase font-bold' }, 'Live Mode')
-                        ),
-                        React.createElement('form', { onSubmit: handlePublishSEO, className: 'flex flex-col gap-6' },
-                            React.createElement('input', { type: 'text', placeholder: 'Nhập Tiêu đề bài viết (Thẻ H1 hỗ trợ Google Index)', value: editTitle, onChange: e => setEditTitle(e.target.value), className: 'w-full p-4 rounded-xl admin-form-input text-sm font-semibold uppercase tracking-wider' }),
-                            React.createElement('input', { type: 'text', placeholder: 'Mô tả tóm tắt nội dung bài viết (Thẻ Meta Description)', value: editDesc, onChange: e => setEditDesc(e.target.value), className: 'w-full p-4 rounded-xl admin-form-input text-xs' }),
-                            
-                            // THANH CÔNG CỤ CHỈNH SỬA TEXT CHUẨN SEO TRỰC QUAN TRÊN KHUNG KÍNH
-                            React.createElement('div', { className: 'flex flex-wrap gap-3 items-center bg-white/5 p-3 rounded-xl border border-white/5' },
-                                React.createElement('button', { type: 'button', onClick: () => setTextFormat(p => ({ ...p, bold: !p.bold })), className: 'px-3 py-1 text-xs rounded border border-white/10 font-bold ' + (textFormat.bold ? 'bg-white text-black' : 'text-white') }, 'Đậm'),
-                                React.createElement('button', { type: 'button', onClick: () => setTextFormat(p => ({ ...p, italic: !p.italic })), className: 'px-3 py-1 text-xs rounded border border-white/10 italic ' + (textFormat.italic ? 'bg-white text-black' : 'text-white') }, 'Nghiêng'),
-                                React.createElement('select', { value: textFormat.align, onChange: e => setTextFormat(p => ({ ...p, align: e.target.value })), className: 'bg-zinc-900 text-white text-xs border border-white/10 rounded p-1 focus:outline-none' },
-                                    React.createElement('option', { value: 'left' }, 'Căn Trái'), React.createElement('option', { value: 'center' }, 'Căn Giữa'), React.createElement('option', { value: 'right' }, 'Căn Phải')
-                                ),
-                                React.createElement('select', { value: textFormat.size, onChange: e => setTextFormat(p => ({ ...p, size: e.target.value })), className: 'bg-zinc-900 text-white text-xs border border-white/10 rounded p-1 focus:outline-none' },
-                                    React.createElement('option', { value: '14px' }, 'Cỡ Nhỏ'), React.createElement('option', { value: '16px' }, 'Cỡ Tiêu Chuẩn (H3)'), React.createElement('option', { value: '22px' }, 'Cỡ Lớn (H2)'), React.createElement('option', { value: '30px' }, 'Cỡ Siêu Lớn (H1)')
-                                ),
-                                React.createElement('select', { value: textFormat.color, onChange: e => setTextFormat(p => ({ ...p, color: e.target.value })), className: 'bg-zinc-900 text-white text-xs border border-white/10 rounded p-1 focus:outline-none' },
-                                    React.createElement('option', { value: '#ffffff' }, 'Chữ Trắng'), React.createElement('option', { value: '#f97316' }, 'Chữ Cam Thể Thao'), React.createElement('option', { value: '#a1a1aa' }, 'Chữ Xám Định Hình')
-                                )
-                            ),
-                            React.createElement('textarea', { rows: '5', placeholder: 'Viết nội dung bài viết chi tiết tại đây...', value: editContent, onChange: e => setEditContent(e.target.value), className: 'w-full p-4 rounded-xl admin-form-input text-sm font-light leading-relaxed' }),
-                            React.createElement('button', { type: 'submit', className: 'px-8 py-4 rounded-full bg-orange-500 text-white font-bold text-[10px] tracking-widest uppercase self-end hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/20' }, 'Xuất Bản Chuẩn SEO')
-                        )
-                    ),
+            const handleSaveLogo = (e) => {
+                e.preventDefault();
+                setLogoImage(inputLogo);
+                alert('Hệ thống điều khiển trung tâm: Cập nhật ảnh Logo thành công!');
+            };
 
-                    // DANH SÁCH BÀI VIẾT HIỂN THỊ
-                    React.createElement('div', { className: 'grid grid-cols-1 md:grid-cols-2 gap-8' },
-                        posts.map((post, index) => React.createElement('div', { key: index, className: 'liquid-card rounded-2xl p-6 flex flex-col justify-between' },
-                            React.createElement('div', null,
-                                React.createElement('div', { className: 'text-[9px] uppercase tracking-widest text-white/30 font-bold font-body mb-2' }, post.date),
-                                React.createElement('h3', { className: 'font-heading italic text-3xl text-white tracking-wide mb-3 uppercase' }, post.title),
-                                React.createElement('p', { className: 'text-xs text-white/50 font-light leading-relaxed mb-6' }, post.desc),
-                                React.createElement('div', { className: 'border-t border-white/5 pt-4 text-xs font-light leading-relaxed font-body text-white/90', dangerouslySetInnerHTML: { __html: post.content } })
-                            )
-                        ))
-                    )
-                )
+            return (
+                <section className="relative w-full py-32 px-6 md:px-16 border-t border-white/5 z-10">
+                    <div className="max-w-6xl mx-auto w-full">
+                        <span className="text-[10px] font-bold tracking-widest uppercase text-white/40 block mb-4">// TRẠM ĐIỀU HÀNH TRI THỨC VÀ ĐÀO TẠO</span>
+                        <h2 className="font-heading italic text-5xl md:text-7xl text-white leading-none tracking-tight mb-16 uppercase select-none">Kiến Thức & Chỉ Huy.</h2>
+                        
+                        {/* TRANG QUẢN TRỊ TRỰC QUAN - XUẤT HIỆN KHI CLICK VÀO LOGO HOẶC THANH NAV */}
+                        {showAdminPortal && (
+                            <div className="liquid-card rounded-3xl p-6 md:p-10 border-orange-500/30 mb-16 bg-zinc-950/95 shadow-2xl transition-all duration-500">
+                                <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
+                                    <h3 className="text-xs font-bold uppercase tracking-widest text-orange-400">Trình Quản Trị Hệ Thống Content CMS & Thiết Kế Thương Hiệu</h3>
+                                    <span className="text-[9px] bg-orange-500/10 border border-orange-500/30 text-orange-400 px-2 py-0.5 rounded-full uppercase font-bold">Admin Terminal Connected</span>
+                                </div>
+                                
+                                {/* Cấu hình Thay đổi Logo */}
+                                <form onSubmit={handleSaveLogo} className="mb-8 p-4 bg-white/5 rounded-xl border border-white/5 flex gap-4 items-center">
+                                    <input type="text" placeholder="Dán link ảnh URL để thay thế logo điều hướng..." value={inputLogo} onChange={e => setInputLogo(e.target.value)} className="flex-1 p-3 rounded-lg admin-form-input text-xs" />
+                                    <button type="submit" className="px-4 py-3 rounded-lg bg-white text-black font-bold text-[10px] tracking-widest uppercase hover:bg-orange-500 hover:text-white transition-colors">Cập Nhật Logo</button>
+                                </form>
+
+                                {/* Biểu mẫu Đăng bài viết chuẩn SEO */}
+                                <form onSubmit={handlePublishSEO} className="flex flex-col gap-6">
+                                    <input type="text" placeholder="Nhập Tiêu đề bài viết (Thẻ H1 hỗ trợ Google Index)" value={editTitle} onChange={e => setEditTitle(e.target.value)} className="w-full p-4 rounded-xl admin-form-input text-sm font-semibold uppercase tracking-wider" />
+                                    <input type="text" placeholder="Mô tả tóm tắt nội dung bài viết (Thẻ Meta Description)" value={editDesc} onChange={e => setEditDesc(e.target.value)} className="w-full p-4 rounded-xl admin-form-input text-xs" />
+                                    
+                                    {/* Hộp định dạng văn bản trực quan */}
+                                    <div className="flex flex-wrap gap-3 items-center bg-white/5 p-3 rounded-xl border border-white/5">
+                                        <button type="button" onClick={() => setTextFormat(p => ({ ...p, bold: !p.bold }))} className={'px-3 py-1 text-xs rounded border border-white/10 font-bold ' + (textFormat.bold ? 'bg-white text-black' : 'text-white')}>Đậm</button>
+                                        <button type="button" onClick={() => setTextFormat(p => ({ ...p, italic: !p.italic }))} className={'px-3 py-1 text-xs rounded border border-white/10 italic ' + (textFormat.italic ? 'bg-white text-black' : 'text-white')}>Nghiêng</button>
+                                        <select value={textFormat.align} onChange={e => setTextFormat(p => ({ ...p, align: e.target.value }))} className="bg-zinc-900 text-white text-xs border border-white/10 rounded p-1 focus:outline-none">
+                                            <option value="left">Căn Trái</option>
+                                            <option value="center">Căn Giữa</option>
+                                            <option value="right">Căn Phải</option>
+                                        </select>
+                                        <select value={textFormat.size} onChange={e => setTextFormat(p => ({ ...p, size: e.target.value }))} className="bg-zinc-900 text-white text-xs border border-white/10 rounded p-1 focus:outline-none">
+                                            <option value="14px">Cỡ Nhỏ</option>
+                                            <option value="16px">Cỡ Tiêu Chuẩn</option>
+                                            <option value="22px">Cỡ Lớn (H2)</option>
+                                            <option value="30px">Cỡ Siêu Lớn (H1)</option>
+                                        </select>
+                                        <select value={textFormat.color} onChange={e => setTextFormat(p => ({ ...p, color: e.target.value }))} className="bg-zinc-900 text-white text-xs border border-white/10 rounded p-1 focus:outline-none">
+                                            <option value="#ffffff">Chữ Trắng</option>
+                                            <option value="#f97316">Chữ Cam Thể Thao</option>
+                                            <option value="#a1a1aa">Chữ Xám Định Hình</option>
+                                        </select>
+                                    </div>
+                                    <textarea rows="5" placeholder="Viết nội dung bài viết chi tiết tại đây..." value={editContent} onChange={e => setEditContent(e.target.value)} className="w-full p-4 rounded-xl admin-form-input text-sm font-light leading-relaxed"></textarea>
+                                    <button type="submit" className="px-8 py-4 rounded-full bg-orange-500 text-white font-bold text-[10px] tracking-widest uppercase self-end hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/20">Xuất Bản Bài Viết</button>
+                                </form>
+                            </div>
+                        )}
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            {posts.map((post, index) => (
+                                <div key={index} className="liquid-card rounded-2xl p-6 flex flex-col justify-between">
+                                    <div>
+                                        <div className="text-[9px] uppercase tracking-widest text-white/30 font-bold font-body mb-2">{post.date}</div>
+                                        <h3 className="font-heading italic text-3xl text-white tracking-wide mb-3 uppercase">{post.title}</h3>
+                                        <p className="text-xs text-white/50 font-light leading-relaxed mb-6">{post.desc}</p>
+                                        <div className="border-t border-white/5 pt-4 text-xs font-light leading-relaxed font-body text-white/90" dangerouslySetInnerHTML={{ __html: post.content }}></div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
             );
         };
 
-        // HỆ THỐNG FOOTER CHUẨN SEO BỐ CỤC THÔNG MINH HƯỚNG TƯƠNG LAI & KHỐI FACEBOOK FANPAGE WIDGET
+        // FOOTER CHUẨN SEO ĐA CỘT TÍNH TOÁN & KHỐI TIỆN ÍCH FACEBOOK WIDGET KÍNH LỎNG ĐỔ BÓNG TẦNG TẦNG
         const ComponentFooterAthletics = () => {
             const [fbPageUrl, setFbPageUrl] = useState('https://facebook.com/pulse.run');
-            return React.createElement('footer', { className: 'relative w-full pt-32 pb-16 px-6 md:px-16 border-t border-white/5 bg-zinc-950/60 z-10 font-body' },
-                React.createElement('div', { className: 'max-w-6xl mx-auto w-full grid grid-cols-1 md:grid-cols-12 gap-12 mb-20' },
-                    
-                    // Cột 1: Thông tin cơ bản của Page
-                    React.createElement('div', { className: 'md:col-span-4' },
-                        React.createElement('div', { className: 'font-heading text-3xl italic tracking-tighter font-black text-white mb-6 uppercase' }, 'pulse.run'),
-                        React.createElement('p', { className: 'text-xs text-white/40 font-light leading-relaxed max-w-sm' }, 'Nền tảng công nghệ cơ sinh học chạy bộ hàng đầu châu Á. Định hình sải chân thế hệ mới dựa trên dữ liệu telemetry phần cứng.')
-                    ),
-                    
-                    // Cột 2 & 3: Vị trí địa chỉ, hotline, email logic, chuẩn SEO hiện đại
-                    React.createElement('div', { className: 'md:col-span-4 grid grid-cols-2 gap-4' },
-                        React.createElement('div', null,
-                            React.createElement('h5', { className: 'text-[10px] font-bold uppercase tracking-widest text-white/60 mb-4' }, 'Vị Trí Trạm Nodes'),
-                            React.createElement('p', { className: 'text-xs text-white/40 font-light leading-relaxed' }, 'Khu Công Nghệ Cao,\nThành Phố Hồ Chí Minh,\nViệt Nam.')
-                        ),
-                        React.createElement('div', null,
-                            React.createElement('h5', { className: 'text-[10px] font-bold uppercase tracking-widest text-white/60 mb-4' }, 'Liên Hệ'),
-                            React.createElement('p', { className: 'text-xs text-white/40 font-light' }, 'Hotline: 1900 PULSE\nMail: ops@pulse.run')
-                        )
-                    ),
-                    
-                    // Cột 4: Mạng xã hội tự động cập nhật & Hộp Facebook Fanpage Widget Kính Lỏng Đổ Bóng ở góc bên phải
-                    React.createElement('div', { className: 'md:col-span-4 flex flex-col justify-between items-start md:items-end' },
-                        React.createElement('div', { className: 'w-full max-w-[280px] liquid-card rounded-2xl p-4 text-left border-white/10' },
-                            React.createElement('div', { className: 'flex items-center gap-3 mb-3' },
-                                React.createElement('div', { className: 'w-7 h-7 rounded-full bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-xs font-bold text-blue-400 font-body' }, 'f'),
-                                React.createElement('div', null,
-                                    React.createElement('div', { className: 'text-[11px] font-bold tracking-wide text-white/90' }, 'PULSE RUNNING CLUB'),
-                                    React.createElement('div', { className: 'text-[9px] text-white/40 font-body' }, '145,000 Vận Động Viên')
-                                )
-                            ),
-                            React.createElement('input', { type: 'text', value: fbPageUrl, onChange: e => setFbPageUrl(e.target.value), className: 'w-full p-2 rounded bg-black/50 border border-white/5 text-[9px] text-white/40 mb-3 focus:outline-none focus:border-white/20 font-body' }),
-                            React.createElement('a', { href: fbPageUrl, target: '_blank', rel: 'noopener noreferrer', className: 'w-full py-2 bg-white/5 border border-white/10 text-center block text-[10px] font-bold tracking-widest text-white rounded-lg hover:bg-white hover:text-black transition-colors uppercase' }, 'Ghé Thăm Fanpage')
-                        )
-                    )
-                ),
-                React.createElement('div', { className: 'max-w-6xl mx-auto w-full border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 select-none opacity-30 text-[10px] font-medium tracking-widest text-white/60' },
-                    React.createElement('span', null, '© 2026 PULSE.RUN. ALL RIGHTS RESERVED.'),
-                    React.createElement('span', null, 'SIÊU NỀN TẢNG THỂ THAO THẾ HỆ MỚI')
-                )
+            return (
+                <footer className="relative w-full pt-32 pb-16 px-6 md:px-16 border-t border-white/5 bg-zinc-950/60 z-10 font-body">
+                    <div className="max-w-6xl mx-auto w-full grid grid-cols-1 md:grid-cols-12 gap-12 mb-20">
+                        <div className="md:col-span-4">
+                            <div className="font-heading text-3xl italic tracking-tighter font-black text-white mb-6 uppercase">pulse.run</div>
+                            <p className="text-xs text-white/40 font-light leading-relaxed max-w-sm">Nền tảng công nghệ cơ sinh học chạy bộ hàng đầu châu Á. Định hình sải chân thế hệ mới dựa trên dữ liệu dữ liệu phần cứng nâng cao.</p>
+                        </div>
+                        <div className="md:col-span-4 grid grid-cols-2 gap-4">
+                            <div>
+                                <h5 className="text-[10px] font-bold uppercase tracking-widest text-white/60 mb-4">Vị Trí Trạm Nodes</h5>
+                                <p className="text-xs text-white/40 font-light leading-relaxed">Khu Công Nghệ Cao,<br/>Thành Phố Hồ Chí Minh,<br/>Việt Nam.</p>
+                            </div>
+                            <div>
+                                <h5 className="text-[10px] font-bold uppercase tracking-widest text-white/60 mb-4">Liên Hệ</h5>
+                                <p className="text-xs text-white/40 font-light">Hotline: 1900 PULSE<br/>Mail: ops@pulse.run</p>
+                            </div>
+                        </div>
+                        <div className="md:col-span-4 flex flex-col justify-between items-start md:items-end">
+                            <div className="w-full max-w-[280px] liquid-card rounded-2xl p-4 text-left border-white/10">
+                                <div className="flex items-center gap-3 mb-3">
+                                    <div className="w-7 h-7 rounded-full bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-xs font-bold text-blue-400 font-body">f</div>
+                                    <div>
+                                        <div className="text-[11px] font-bold tracking-wide text-white/90">PULSE RUNNING CLUB</div>
+                                        <div className="text-[9px] text-white/40 font-body">145,000 Vận Động Viên</div>
+                                    </div>
+                                </div>
+                                <input type="text" value={fbPageUrl} onChange={e => setFbPageUrl(e.target.value)} className="w-full p-2 rounded bg-black/50 border border-white/5 text-[9px] text-white/40 mb-3 focus:outline-none focus:border-white/20 font-body" />
+                                <a href={fbPageUrl} target="_blank" rel="noopener noreferrer" className="w-full py-2 bg-white/5 border border-white/10 text-center block text-[10px] font-bold tracking-widest text-white rounded-lg hover:bg-white hover:text-black transition-colors uppercase">Ghé Thăm Fanpage</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="max-w-6xl mx-auto w-full border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 select-none opacity-30 text-[10px] font-medium tracking-widest text-white/60">
+                        <span>© 2026 PULSE.RUN. ALL RIGHTS RESERVED.</span>
+                        <span>SIÊU NỀN TẢNG THỂ THAO THẾ HỆ MỚI</span>
+                    </div>
+                </footer>
             );
         };
 
-        // BỘ ĐIỀU PHỐI VÒNG ĐỜI VÀ STATE TOÀN CỤC (APP CORE)
+        // BỘ ĐIỀU PHỐI TRẠNG THÁI VÀ KHỞI CHẠY KHÔNG GIAN (APP LAYOUT ENGINES)
         const App = () => {
             const [appState, setAppState] = useState({ activeSection: 0 });
             const [showAdminPortal, setShowAdminPortal] = useState(false);
@@ -411,19 +450,21 @@
             };
             const toggleAdminPortal = () => setShowAdminPortal(!showAdminPortal);
 
-            return React.createElement(AppContext.Provider, { value: { appState, changeSection, logoImage, showAdminPortal, toggleAdminPortal } },
-                React.createElement('main', { className: 'relative w-full bg-[#030305] overflow-hidden' },
-                    React.createElement(FutureNavCommand, null),
-                    React.createElement('div', { ref: listRefs[0] }, React.createElement(SectionHeroAura, null)),
-                    React.createElement('div', { ref: listRefs[1] }, React.createElement(ComponentAboutHome, null), React.createElement(ComponentProductsExhibition, null)),
-                    React.createElement('div', { ref: listRefs[2] }, React.createElement(ComponentKnowledgeCMS, null)),
-                    React.createElement('div', { ref: listRefs[3] }, React.createElement(ComponentFooterAthletics, null))
-                )
+            return (
+                <AppContext.Provider value={{ appState, changeSection, logoImage, setLogoImage, showAdminPortal, toggleAdminPortal }}>
+                    <main className="relative w-full bg-[#030305] overflow-hidden">
+                        <FutureNavCommand />
+                        <div ref={listRefs[0]}><SectionHeroAura /></div>
+                        <div ref={listRefs[1]}><ComponentAboutHome /><ComponentProductsExhibition /></div>
+                        <div ref={listRefs[2]}><ComponentKnowledgeCMS /></div>
+                        <div ref={listRefs[3]}><ComponentFooterAthletics /></div>
+                    </main>
+                </AppContext.Provider>
             );
         };
 
         const rootContainer = ReactDOM.createRoot(document.getElementById('root'));
-        rootContainer.render(React.createElement(App));
+        rootContainer.render(<App />);
     </script>
 </body>
 </html>
