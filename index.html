@@ -1,0 +1,228 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Venture Past Our Sky | Galactic Command</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { heading: ['"Instrument Serif"', 'serif'], body: ['"Barlow"', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #000; color: #fff; overflow-x: hidden; margin: 0; padding: 0; font-family: 'Barlow', sans-serif; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 99px; }
+        
+        /* HỆ THỐNG KÍNH LỎNG HOÀN HẢO */
+        .liquid-card {
+            background: rgba(255, 255, 255, 0.01);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05), 0 20px 40px rgba(0,0,0,0.5);
+            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s, box-shadow 0.3s;
+        }
+        .liquid-card:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.15), 0 30px 60px rgba(0,0,0,0.7);
+        }
+        .liquid-nav {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+        }
+        .glow-button {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            transition: all 0.4s ease;
+        }
+        .glow-button:hover {
+            background: #fff; color: #000; box-shadow: 0 0 25px rgba(255,255,255,0.3);
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script>
+        const { useState, useEffect, useRef, createContext, useContext } = React;
+        const AppContext = createContext();
+
+        // 1. Vector Icons đóng gói
+        const IconArrow = () => React.createElement('svg', { className: 'w-4 h-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1', fill: 'none', stroke: 'currentColor', strokeWidth: '2', viewBox: '0 0 24 24' }, React.createElement('line', { x1: '7', y1: '17', x2: '17', y2: '7' }), React.createElement('polyline', { points: '7 7 17 7 17 17' }));
+        const IconPlay = () => React.createElement('svg', { className: 'w-4 h-4 fill-current', viewBox: '0 0 24 24' }, React.createElement('polygon', { points: '6,4 20,12 6,20' }));
+        const IconGlobe = () => React.createElement('svg', { className: 'w-5 h-5 opacity-70', fill: 'none', stroke: 'currentColor', strokeWidth: '1.5', viewBox: '0 0 24 24' }, React.createElement('circle', { cx: '12', cy: '12', r: '10' }), React.createElement('path', { d: 'M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z' }));
+
+        // 2. Bộ nạp Video tăng tốc GPU không lag
+        const HardwareVideo = ({ src }) => {
+            const videoRef = useRef(null);
+            useEffect(() => {
+                if (videoRef.current) {
+                    videoRef.current.style.opacity = '0';
+                    videoRef.current.addEventListener('loadeddata', () => {
+                        videoRef.current.style.transition = 'opacity 1s ease';
+                        videoRef.current.style.opacity = '0.35';
+                    });
+                }
+            }, [src]);
+            return React.createElement('video', { ref: videoRef, src: src, className: 'absolute inset-0 w-full h-full object-cover pointer-events-none select-none', muted: true, playsInline: true, loop: true, autoPlay: true, preload: 'auto' });
+        };
+
+        // 3. Thanh điều hướng toàn cục
+        const NavigationBar = () => {
+            const { state, setMenu } = useContext(AppContext);
+            return React.createElement('nav', { className: 'fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-6xl z-50 flex items-center justify-between px-6 py-3 liquid-nav rounded-full' },
+                React.createElement('div', { className: 'font-heading text-2xl italic lowercase tracking-tighter text-white font-medium select-none' }, 'pulse.space'),
+                React.createElement('div', { className: 'hidden md:flex items-center gap-1' },
+                    ['Overview', 'Capabilities', 'Fleet Exhibition', 'Quantum Control'].map((item, idx) => 
+                        React.createElement('button', { key: item, onClick: () => setMenu(idx), className: 'px-4 py-2 text-xs font-medium tracking-widest uppercase transition-all duration-300 ' + (state.currentSection === idx ? 'text-white' : 'text-white/40 hover:text-white') }, item)
+                    )
+                ),
+                React.createElement('button', { onClick: () => setMenu(3), className: 'px-5 py-2 text-xs font-semibold tracking-widest uppercase rounded-full bg-white text-black transition-transform duration-300 hover:scale-105' }, 'Reserve Slot')
+            );
+        };
+
+        // 4. Phân khu 1: Hero entry
+        const SectionHero = () => {
+            const { setMenu } = useContext(AppContext);
+            return React.createElement('section', { className: 'relative w-full min-h-screen flex flex-col justify-between items-center pt-40 pb-12 px-6 overflow-hidden' },
+                React.createElement(HardwareVideo, { src: 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260418_080021_d598092b-c4c2-4e53-8e46-94cf9064cd50.mp4' }),
+                React.createElement('div', { className: 'relative z-10 max-w-4xl text-center flex flex-col items-center my-auto' },
+                    React.createElement('div', { className: 'px-4 py-1.5 rounded-full liquid-nav text-[11px] font-medium uppercase tracking-widest text-white/80 mb-6 flex items-center gap-2 select-none' },
+                        React.createElement('span', { className: 'w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse' }), 'Deep Space Operations Active [2026]'
+                    ),
+                    React.createElement('h1', { className: 'text-5xl md:text-7xl lg:text-8xl font-heading italic text-white leading-[0.85] tracking-[-3px] max-w-3xl mb-8' }, 'Venture Past Our Sky Across Universe'),
+                    React.createElement('p', { className: 'text-sm md:text-base text-white/60 font-light max-w-xl leading-relaxed mb-10 tracking-wide' }, 'Discover the universe in ways once unimaginable. Our pioneering vessels and breakthrough engineering bring deep-space exploration within reach—secure and extraordinary.'),
+                    React.createElement('div', { className: 'flex flex-wrap justify-center items-center gap-6' },
+                        React.createElement('button', { onClick: () => setMenu(2), className: 'group px-6 py-3.5 rounded-full glow-button text-xs font-semibold tracking-widest uppercase flex items-center gap-2' }, 'Explore Fleet', React.createElement(IconArrow)),
+                        React.createElement('a', { href: '#', className: 'flex items-center gap-2 text-xs font-semibold tracking-widest uppercase text-white/80 hover:text-white transition-colors' }, React.createElement(IconPlay), 'Watch Launch')
+                    )
+                ),
+                React.createElement('div', { className: 'relative z-10 w-full max-w-5xl border-t border-white/10 pt-6 flex flex-wrap justify-between items-center gap-6 opacity-60' },
+                    React.createElement('span', { className: 'text-[11px] font-medium tracking-widest uppercase' }, 'Strategic Aerospace Networks'),
+                    React.createElement('div', { className: 'flex flex-wrap gap-8 md:gap-12 font-heading italic text-xl md:text-2xl' },
+                        ['Aeon Labs', 'Vela Aerospace', 'Apex Orbital', 'Zeno Systems'].map(i => React.createElement('span', { key: i }, i))
+                    )
+                )
+            );
+        };
+        // 5. Phân khu 2: Capabilities Matrix - Kính lỏng phản xạ tọa độ
+        const SectionCapabilities = () => {
+            const cards = [
+                { title: 'AI Scenery Engine', desc: 'Simulating complex exoplanet atmospheres and custom deep-space coordinate systems instantly.', tag: 'Quantum Core' },
+                { title: 'Mass Batch Production', desc: 'Deploy entire fleets with standardized tactical data layouts and structural telemetry.', tag: 'Automated' },
+                { title: 'Dynamic Smart Lighting', desc: 'Ray-tracing physical illumination curves across binary star clusters and nebulae.', tag: 'GPU Matrix' }
+            ];
+            return React.createElement('section', { className: 'relative w-full min-h-screen flex flex-col justify-center py-24 px-6 md:px-16 border-t border-white/5 bg-zinc-950/40' },
+                React.createElement(HardwareVideo, { src: 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260418_094631_d30ab262-45ee-4b7d-99f3-5d5848c8ef13.mp4' }),
+                React.createElement('div', { className: 'relative z-10 max-w-6xl mx-auto w-full' },
+                    React.createElement('span', { className: 'text-[11px] font-semibold tracking-widest uppercase text-white/40 block mb-3' }, '// SYSTEM CAPABILITIES'),
+                    React.createElement('h2', { className: 'font-heading italic text-5xl md:text-7xl lg:text-[5.5rem] text-white leading-none tracking-tight mb-16' }, 'Production Evolved.'),
+                    React.createElement('div', { className: 'grid grid-cols-1 md:grid-cols-3 gap-6 w-full' },
+                        cards.map(card => React.createElement('div', { key: card.title, className: 'liquid-card rounded-2xl p-6 min-h-[280px] flex flex-col justify-between' },
+                            React.createElement('div', { className: 'flex justify-between items-start' },
+                                React.createElement('div', { className: 'w-2.5 h-2.5 rounded-full bg-white/40' }),
+                                React.createElement('span', { className: 'px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-medium tracking-wider text-white/70 uppercase' }, card.tag)
+                            ),
+                            React.createElement('div', null,
+                                React.createElement('h3', { className: 'font-heading italic text-3xl text-white tracking-wide mb-2' }, card.title),
+                                React.createElement('p', { className: 'text-xs text-white/60 font-light leading-relaxed' }, card.desc)
+                            )
+                        ))
+                    )
+                )
+            );
+        };
+
+        // 6. Phân khu 3: Interactive Fleet Showroom
+        const SectionFleet = () => {
+            const [selectedTab, setSelectedTab] = useState(0);
+            const fleets = [
+                { name: 'Aetheris-X1', class: 'Scout Vanguard', range: '14.8 Light Years', speed: 'Mach 450' },
+                { name: 'Chronos Heavy', class: 'Cargo Dreadnought', range: '4.2 Light Years', speed: 'Mach 120' },
+                { name: 'Vela Horizon', class: 'Deep Explorer', range: '45.0 Light Years', speed: 'Warp Factor 2' }
+            ];
+            return React.createElement('section', { className: 'relative w-full min-h-screen flex flex-col justify-center py-24 px-6 md:px-16 border-t border-white/5' },
+                React.createElement('div', { className: 'relative z-10 max-w-6xl mx-auto w-full' },
+                    React.createElement('span', { className: 'text-[11px] font-semibold tracking-widest uppercase text-white/40 block mb-3' }, '// ARCHITECTURE EXHIBITION'),
+                    React.createElement('h2', { className: 'font-heading italic text-5xl md:text-7xl lg:text-[5.5rem] text-white leading-none tracking-tight mb-12' }, 'The Vanguard Vessels.'),
+                    React.createElement('div', { className: 'flex border-b border-white/10 mb-12 overflow-x-auto' },
+                        fleets.map((f, idx) => React.createElement('button', { key: f.name, onClick: () => setSelectedTab(idx), className: 'pb-4 px-2 text-sm font-medium tracking-wide transition-all mr-8 whitespace-nowrap ' + (selectedTab === idx ? 'text-white border-b-2 border-white' : 'text-white/30 hover:text-white') }, f.name))
+                    ),
+                    React.createElement('div', { className: 'liquid-card rounded-3xl p-8 md:p-12 grid grid-cols-1 md:grid-cols-2 gap-8 items-center' },
+                        React.createElement('div', null,
+                            React.createElement('span', { className: 'text-xs font-semibold uppercase tracking-widest text-emerald-400' }, fleets[selectedTab].class),
+                            React.createElement('h3', { className: 'font-heading italic text-5xl text-white tracking-tighter mt-2 mb-6' }, fleets[selectedTab].name),
+                            React.createElement('p', { className: 'text-xs md:text-sm text-white/60 font-light leading-relaxed mb-8' }, 'Engineered for absolute resilience under extreme spatial distortion curves. Equipped with an autonomous quantum navigation matrix.')
+                        ),
+                        React.createElement('div', { className: 'grid grid-cols-2 gap-4 border-l border-white/10 pl-0 md:pl-12' },
+                            React.createElement('div', null, React.createElement('div', { className: 'text-[10px] uppercase tracking-widest text-white/40' }, 'Operational Range'), React.createElement('div', { className: 'text-2xl font-heading italic text-white mt-1' }, fleets[selectedTab].range)),
+                            React.createElement('div', null, React.createElement('div', { className: 'text-[10px] uppercase tracking-widest text-white/40' }, 'Max Cruise Velocity'), React.createElement('div', { className: 'text-2xl font-heading italic text-white mt-1' }, fleets[selectedTab].speed))
+                        )
+                    )
+                )
+            );
+        };
+
+        // 7. Phân khu 4: Quantum Launch Control (Form đặt chỗ)
+        const SectionControl = () => {
+            const [submitted, setSubmitted] = useState(false);
+            return React.createElement('section', { className: 'relative w-full min-h-screen flex flex-col justify-center py-24 px-6 border-t border-white/5 bg-zinc-950/20' },
+                React.createElement('div', { className: 'relative z-10 max-w-xl mx-auto w-full text-center' },
+                    React.createElement('span', { className: 'text-[11px] font-semibold tracking-widest uppercase text-white/40 block mb-3' }, '// SECURE DEPLOYMENT PROTOCOL'),
+                    React.createElement('h2', { className: 'font-heading italic text-5xl md:text-6xl text-white leading-none tracking-tight mb-6' }, 'Initiate Your Passage'),
+                    React.createElement('p', { className: 'text-xs md:text-sm text-white/60 font-light leading-relaxed mb-10' }, 'Submit your routing coordinates to receive priority tier synchronization code for the 2026 maiden voyage.'),
+                    submitted ? 
+                    React.createElement('div', { className: 'liquid-card rounded-2xl p-8 text-center' },
+                        React.createElement('div', { className: 'w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mx-auto mb-4 text-emerald-400' }, '✓'),
+                        React.createElement('div', { className: 'font-heading italic text-2xl text-white' }, 'Coordinates Logged Successfully'),
+                        React.createElement('p', { className: 'text-[11px] text-white/50 font-light mt-2' }, 'Check your tactical sub-space comms window for confirmation.')
+                    ) :
+                    React.createElement('form', { onSubmit: (e) => { e.preventDefault(); setSubmitted(true); }, className: 'flex flex-col gap-4' },
+                        React.createElement('input', { type: 'email', required: true, placeholder: 'Enter Secure Subspace Email', className: 'w-full px-6 py-4 rounded-full bg-white/5 border border-white/10 text-white placeholder-white/30 text-xs tracking-widest uppercase focus:outline-none focus:border-white/30 font-medium transition-colors' }),
+                        React.createElement('button', { type: 'submit', className: 'w-full py-4 rounded-full bg-white text-black font-semibold text-xs tracking-widest uppercase transition-transform duration-300 hover:scale-[1.02]' }, 'Authorize Terminal Synchronize')
+                    )
+                )
+            );
+        };
+
+        // 8. Lõi quản lý trạng thái và Khởi dựng cây DOM Gốc (App Component)
+        const App = () => {
+            const [state, setState] = useState({ currentSection: 0 });
+            const sectionRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
+            
+            const setMenu = (idx) => {
+                setState({ currentSection: idx });
+                if (sectionRefs[idx] && sectionRefs[idx].current) {
+                    sectionRefs[idx].current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            };
+
+            return React.createElement(AppContext.Provider, { value: { state, setMenu } },
+                React.createElement('main', { className: 'relative w-full bg-black' },
+                    React.createElement(NavigationBar, null),
+                    React.createElement('div', { ref: sectionRefs[0] }, React.createElement(SectionHero, null)),
+                    React.createElement('div', { ref: sectionRefs[1] }, React.createElement(SectionCapabilities, null)),
+                    React.createElement('div', { ref: sectionRefs[2] }, React.createElement(SectionFleet, null)),
+                    React.createElement('div', { ref: sectionRefs[3] }, React.createElement(SectionControl, null))
+                )
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(React.createElement(App));
+    </script>
+</body>
+</html>
